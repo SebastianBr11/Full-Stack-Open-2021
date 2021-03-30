@@ -1,5 +1,41 @@
 import React, { useState } from 'react'
 
+const AnecdoteOfDay = ({
+  anecdotes,
+  selected,
+  setSelected,
+  handleVote,
+  votes,
+}) => {
+  return (
+    <>
+      <div>{anecdotes[selected]}</div>
+      <p>has {votes[selected]} votes</p>
+      <button onClick={handleVote}>vote</button>
+      <button
+        onClick={() =>
+          setSelected(Math.floor(Math.random() * anecdotes.length))
+        }
+      >
+        next anecdote
+      </button>
+    </>
+  )
+}
+
+const Anecdote = ({ anecdote, amountVotes }) => {
+  return (
+    <>
+      <p>{anecdote}</p>
+      <p>has {amountVotes} votes</p>
+    </>
+  )
+}
+
+const getIndexOfMostVotedAnecdote = votes => {
+  return votes.indexOf(Math.max.apply(null, votes))
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often',
@@ -23,16 +59,15 @@ const App = () => {
 
   return (
     <>
-      <div>{anecdotes[selected]}</div>
-      <p>has {votes[selected]} votes</p>
-      <button onClick={handleVote}>vote</button>
-      <button
-        onClick={() =>
-          setSelected(Math.floor(Math.random() * anecdotes.length))
-        }
-      >
-        next anecdote
-      </button>
+      <h1>Anecdote of the day</h1>
+      <AnecdoteOfDay
+        {...{ anecdotes, handleVote, selected, setSelected, votes }}
+      />
+      <h1>Anecdote with most views</h1>
+      <Anecdote
+        anecdote={anecdotes[getIndexOfMostVotedAnecdote(votes)]}
+        amountVotes={votes[getIndexOfMostVotedAnecdote(votes)]}
+      />
     </>
   )
 }
