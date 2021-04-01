@@ -1,11 +1,6 @@
 import React from 'react'
 import Course from './components/Course'
 
-// const Total = ({ parts }) => {
-//   const exercises = parts.map(({ exercises }) => exercises)
-//   return <p>Number of exercises {exercises.reduce((a, b) => a + b)}</p>
-// }
-
 const App = () => {
   const course = {
     id: 1,
@@ -25,6 +20,11 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3,
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4,
       },
     ],
   }
