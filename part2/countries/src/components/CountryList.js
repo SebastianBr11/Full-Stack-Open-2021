@@ -1,8 +1,10 @@
+import CountryItem from './CountryItem'
+
 const CountryList = ({ countries }) => {
   return (
     <div>
       {countries.map(c => (
-        <div key={c.numericCode}>{c.name}</div>
+        <CountryItem key={c.name} country={c} />
       ))}
     </div>
   )
