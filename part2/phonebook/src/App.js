@@ -27,9 +27,13 @@ const App = () => {
       alert(`${newNumber} is already added to the phonebook`)
       return
     }
-    setPersons([...persons, { name: newName, number: newNumber }])
-    setNewName('')
-    setPhoneNum('')
+    const newPerson = { name: newName, number: newNumber }
+
+    axios.post('http://localhost:3001/persons', newPerson).then(res => {
+      setPersons(persons.concat(res.data))
+      setNewName('')
+      setPhoneNum('')
+    })
   }
 
   const handleNameChange = e => setNewName(e.target.value)
