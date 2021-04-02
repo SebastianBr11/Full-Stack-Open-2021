@@ -17,15 +17,23 @@ const App = () => {
 
   const addPerson = e => {
     e.preventDefault()
-    if (persons.some(p => p.name === newName)) {
-      alert(`${newName} is already added to the phonebook`)
-      return
-    }
-    if (persons.some(p => p.number === newNumber)) {
-      alert(`${newNumber} is already added to the phonebook`)
-      return
-    }
     const newPerson = { name: newName, number: newNumber }
+
+    let idOfExistingP = 0
+    const personExists = persons.some(p => {
+      idOfExistingP = p.id
+      return p.name === newName
+    })
+
+    if (personExists) {
+      const msg = `${newName} is already added to phonebook, replace the old number with a new one?`
+      if (window.confirm(msg)) {
+        personService.update(idOfExistingP, newPerson).then(newP => {
+          setPersons(persons.map(p => (p.id !== idOfExistingP ? p : newP)))
+        })
+      }
+      return
+    }
 
     personService.create(newPerson).then(person => {
       setPersons(persons.concat(person))
