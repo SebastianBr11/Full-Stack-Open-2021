@@ -12,6 +12,7 @@ const App = () => {
   const [newNumber, setPhoneNum] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const [successMsg, setSuccessMsg] = useState(null)
+  const [errorMsg, setErrorMsg] = useState(null)
 
   useEffect(() => {
     personService.getAll().then(persons => setPersons(persons))
@@ -30,11 +31,20 @@ const App = () => {
     if (personExists) {
       const msg = `${newName} is already added to phonebook, replace the old number with a new one?`
       if (window.confirm(msg)) {
-        personService.update(idOfExistingP, newPerson).then(newP => {
-          setPersons(persons.map(p => (p.id !== idOfExistingP ? p : newP)))
-          setSuccessMsg(`Changed ${newP.name}'s number to ${newP.number}`)
-          setTimeout(() => setSuccessMsg(null), 5000)
-        })
+        personService
+          .update(idOfExistingP, newPerson)
+          .then(newP => {
+            setPersons(persons.map(p => (p.id !== idOfExistingP ? p : newP)))
+            setSuccessMsg(`Changed ${newP.name}'s number to ${newP.number}`)
+            setTimeout(() => setSuccessMsg(null), 5000)
+          })
+          .catch(err => {
+            console.log(err)
+            setErrorMsg(
+              `Information of ${newName} has already been removed from server`,
+            )
+            setTimeout(() => setErrorMsg(null), 5000)
+          })
       }
       return
     }
@@ -55,6 +65,13 @@ const App = () => {
       personService
         .del(id)
         .then(_ => setPersons(persons.filter(p => p.id !== id)))
+        .catch(err => {
+          console.log(err)
+          setErrorMsg(
+            `Information of ${person.name} has already been removed from server`,
+          )
+          setTimeout(() => setErrorMsg(null), 5000)
+        })
     }
   }
 
@@ -69,7 +86,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMsg} />
+      {successMsg && <Notification message={successMsg} type='success' />}
+      {errorMsg && <Notification message={errorMsg} type='error' />}
 
       <Filter {...{ handleSearchChange, searchQuery }} />
 
