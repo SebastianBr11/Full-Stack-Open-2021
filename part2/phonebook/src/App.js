@@ -39,23 +39,27 @@ const App = () => {
             setTimeout(() => setSuccessMsg(null), 5000)
           })
           .catch(err => {
-            console.log(err)
-            setErrorMsg(
-              `Information of ${newName} has already been removed from server`,
-            )
+            console.log(err.response)
+            setErrorMsg(err.response.data.error)
             setTimeout(() => setErrorMsg(null), 5000)
           })
       }
       return
     }
 
-    personService.create(newPerson).then(person => {
-      setPersons(persons.concat(person))
-      setNewName('')
-      setPhoneNum('')
-      setSuccessMsg(`Added ${person.name}`)
-      setTimeout(() => setSuccessMsg(null), 5000)
-    })
+    personService
+      .create(newPerson)
+      .then(person => {
+        setPersons(persons.concat(person))
+        setNewName('')
+        setPhoneNum('')
+        setSuccessMsg(`Added ${person.name}`)
+        setTimeout(() => setSuccessMsg(null), 5000)
+      })
+      .catch(err => {
+        setErrorMsg(err.response.data.error)
+        setTimeout(() => setSuccessMsg(null), 5000)
+      })
   }
 
   const deletePerson = id => {
