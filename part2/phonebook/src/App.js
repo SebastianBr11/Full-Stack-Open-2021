@@ -58,7 +58,7 @@ const App = () => {
       })
       .catch(err => {
         setErrorMsg(err.response.data.error)
-        setTimeout(() => setSuccessMsg(null), 5000)
+        setTimeout(() => setErrorMsg(null), 5000)
       })
   }
 
