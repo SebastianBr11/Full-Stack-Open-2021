@@ -37,6 +37,21 @@ test('POST request to /api/blogs creates post', async () => {
   expect(lengthAfter).toBe(lengthBefore + 1)
 })
 
+test('POST request to /api/blogs without likes has default', async () => {
+  const res = await api
+    .post('/api/blogs')
+    .send({
+      title: 'good title',
+      author: 'good author',
+      url: 'good url',
+    })
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const body = await res.body
+  expect(body.likes).toBe(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
