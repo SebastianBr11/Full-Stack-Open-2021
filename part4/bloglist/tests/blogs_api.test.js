@@ -18,6 +18,25 @@ test('unique identifier of blog posts is named id', async () => {
   expect(idOfFirst).toBeDefined()
 })
 
+test('POST request to /api/blogs creates post', async () => {
+  const lengthBefore = await (await api.get('/api/blogs')).body.length
+
+  await api
+    .post('/api/blogs')
+    .send({
+      title: 'good title',
+      author: 'good author',
+      url: 'good url',
+      likes: 5,
+    })
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const lengthAfter = await (await api.get('/api/blogs')).body.length
+
+  expect(lengthAfter).toBe(lengthBefore + 1)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
