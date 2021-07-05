@@ -37,7 +37,7 @@ test('POST request to /api/blogs creates post', async () => {
   expect(lengthAfter).toBe(lengthBefore + 1)
 })
 
-test('POST request to /api/blogs without likes has default', async () => {
+test('POST request to /api/blogs without likes has default of 0', async () => {
   const res = await api
     .post('/api/blogs')
     .send({
@@ -52,6 +52,15 @@ test('POST request to /api/blogs without likes has default', async () => {
   expect(body.likes).toBe(0)
 })
 
+test('POST request to /api/blogs responds with 400 if title and url are missing', async () => {
+  await api
+    .post('/api/blogs')
+    .send({
+      author: 'author1',
+    })
+    .expect(400)
+})
+
 afterAll(() => {
-  mongoose.connection.close()
+  return mongoose.connection.close()
 })
