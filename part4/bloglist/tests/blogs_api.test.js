@@ -74,6 +74,24 @@ test("Deleting a blog post with correct id format but unknown id doesn't work", 
   await api.delete('/api/blogs60d970917009802b4a7b057f').expect(404)
 })
 
+test('Putting a blog post works', async () => {
+  const id = await (await api.get('/api/blogs')).body[0].id
+  await api
+    .put('/api/blogs/' + id)
+    .send({ likes: 5 })
+    .expect(200)
+})
+
+test("Putting a blog post with wrong id format doesn't work", async () => {
+  await api.put('/api/blogs/5').send({ likes: 5 }).expect(400)
+})
+
+test("Putting a blog post with correct id format but unknown id doesn't work", async () => {
+  await api
+    .put('/api/blogs60d970917009802b4a7b057f')
+    .send({ likes: 5 })
+    .expect(404)
+})
 afterAll(() => {
   return mongoose.connection.close()
 })
