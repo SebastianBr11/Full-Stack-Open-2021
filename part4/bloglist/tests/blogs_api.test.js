@@ -61,6 +61,19 @@ test('POST request to /api/blogs responds with 400 if title and url are missing'
     .expect(400)
 })
 
+test('Deleting a blog post works', async () => {
+  const id = await (await api.get('/api/blogs')).body[0].id
+  await api.delete('/api/blogs/' + id).expect(204)
+})
+
+test("Deleting a blog post with wrong id format doesn't work", async () => {
+  await api.delete('/api/blogs/5').expect(400)
+})
+
+test("Deleting a blog post with correct id format but unknown id doesn't work", async () => {
+  await api.delete('/api/blogs60d970917009802b4a7b057f').expect(404)
+})
+
 afterAll(() => {
   return mongoose.connection.close()
 })
