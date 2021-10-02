@@ -72,6 +72,13 @@ test('correct status and response when password is too short', async () => {
   expect(lengthAfter).toBe(lengthBefore)
 })
 
+test('can create new user', async () => {
+  await api
+    .post('/api/users')
+    .send({ username: 'user', password: 'password' })
+    .expect(201)
+})
+
 afterAll(() => {
   return mongoose.connection.close()
 })
