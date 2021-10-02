@@ -9,7 +9,7 @@ test('correct status and response when creating user without username', async ()
 
   const test = await api
     .post('/api/users')
-    .send({ password: '123asdf' })
+    .send({ password: '123asdf', name: 'myname' })
     .expect(400)
 
   expect(test.body.error).toBeDefined()
@@ -27,7 +27,7 @@ test('correct status and response when creating user without password', async ()
 
   const test = await api
     .post('/api/users')
-    .send({ username: 'username1' })
+    .send({ username: 'username1', name: 'myname' })
     .expect(400)
 
   expect(test.body.error).toBeDefined()
@@ -43,7 +43,7 @@ test('correct status and response when username is too short', async () => {
 
   const test = await api
     .post('/api/users')
-    .send({ username: 'us', password: 'pass' })
+    .send({ username: 'us', name: 'myname', password: 'pass' })
     .expect(400)
 
   expect(test.body.error).toBeDefined()
@@ -61,7 +61,7 @@ test('correct status and response when password is too short', async () => {
 
   const test = await api
     .post('/api/users')
-    .send({ username: 'user', password: 'pa' })
+    .send({ username: 'user', name: 'myname', password: 'pa' })
     .expect(400)
 
   expect(test.body.error).toBeDefined()
@@ -75,7 +75,7 @@ test('correct status and response when password is too short', async () => {
 test('can create new user', async () => {
   await api
     .post('/api/users')
-    .send({ username: 'user', password: 'password' })
+    .send({ username: 'user', name: 'myname', password: 'password' })
     .expect(201)
 })
 
