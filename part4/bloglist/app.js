@@ -7,6 +7,8 @@ const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 const app = express()
 
+app.use(middleware.tokenExtractor)
+
 app.use(cors())
 app.use(express.json())
 
