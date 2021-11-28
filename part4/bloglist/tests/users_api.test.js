@@ -75,7 +75,7 @@ test('correct status and response when password is too short', async () => {
 test('can create new user', async () => {
   await api
     .post('/api/users')
-    .send({ username: 'user', name: 'myname', password: 'password' })
+    .send({ username: 'user1', name: 'myname', password: 'password' })
     .expect(201)
 })
 
