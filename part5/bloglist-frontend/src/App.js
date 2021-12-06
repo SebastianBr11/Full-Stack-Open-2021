@@ -85,6 +85,20 @@ const App = () => {
     setUser(null)
   }
 
+  const addBlog = async blog => {
+    try {
+      const newBlog = await blogService.create(blog)
+
+      setSuccessMsg(`a new blog ${blog.title} by ${blog.author} added`)
+      setTimeout(() => setSuccessMsg(null), 5000)
+      setBlogs(blogs => blogs.concat(newBlog))
+    } catch (exception) {
+      console.log('error', exception)
+      setErrorMsg(exception.response.data.error)
+      setTimeout(() => setErrorMsg(null), 5000)
+    }
+  }
+
   if (user === null) {
     return loginForm()
   }
@@ -100,7 +114,7 @@ const App = () => {
       </div>
       <br />
       <Togglable buttonLabel={'create new blog'}>
-        <CreateBlog setSuccessMsg={setSuccessMsg} setErrorMsg={setErrorMsg} />
+        <CreateBlog createBlog={addBlog} />
       </Togglable>
       {blogs.map(blog => (
         <Blog key={blog.id} blog={blog} />

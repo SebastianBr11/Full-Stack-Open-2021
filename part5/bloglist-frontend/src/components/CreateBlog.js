@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
-const CreateBlog = ({ setSuccessMsg, setErrorMsg }) => {
+const CreateBlog = ({ createBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -9,19 +8,10 @@ const CreateBlog = ({ setSuccessMsg, setErrorMsg }) => {
   const handleSubmit = async e => {
     e.preventDefault()
 
-    try {
-      await blogService.create({ title, author, url })
-
-      setSuccessMsg(`a new blog ${title} by ${author} added`)
-      setTimeout(() => setSuccessMsg(null), 5000)
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-    } catch (exception) {
-      console.log('error', exception)
-      setErrorMsg(exception.response.data.error)
-      setTimeout(() => setErrorMsg(null), 5000)
-    }
+    createBlog({ title, author, url })
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   return (
