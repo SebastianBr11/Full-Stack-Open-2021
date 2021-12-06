@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import CreateBlog from './components/CreateBlog'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -98,7 +99,9 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </div>
       <br />
-      <CreateBlog setSuccessMsg={setSuccessMsg} setErrorMsg={setErrorMsg} />
+      <Togglable buttonLabel={'create new blog'}>
+        <CreateBlog setSuccessMsg={setSuccessMsg} setErrorMsg={setErrorMsg} />
+      </Togglable>
       {blogs.map(blog => (
         <Blog key={blog.id} blog={blog} />
       ))}
