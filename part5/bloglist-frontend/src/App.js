@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import CreateBlog from './components/CreateBlog'
 import Notification from './components/Notification'
@@ -14,6 +14,8 @@ const App = () => {
 
 	const [successMsg, setSuccessMsg] = useState(null)
 	const [errorMsg, setErrorMsg] = useState(null)
+
+	const blogFormRef = useRef()
 
 	useEffect(() => {
 		async function getAndSetBlogs() {
@@ -93,6 +95,7 @@ const App = () => {
 	const addBlog = async blog => {
 		try {
 			const newBlog = await blogService.create(blog)
+			blogFormRef.current.toggleVisibility()
 
 			setSuccessMsg(`a new blog ${blog.title} by ${blog.author} added`)
 			setTimeout(() => setSuccessMsg(null), 5000)
@@ -118,7 +121,7 @@ const App = () => {
 				<button onClick={handleLogout}>logout</button>
 			</div>
 			<br />
-			<Togglable buttonLabel={'create new blog'}>
+			<Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
 				<CreateBlog createBlog={addBlog} />
 			</Togglable>
 			{blogs.map(blog => (
