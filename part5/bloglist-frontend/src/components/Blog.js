@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, isSameUser }) => {
 	const [showingMore, setShowingMore] = useState(false)
 
 	const toggleView = () => setShowingMore(prev => !prev)
@@ -14,8 +14,13 @@ const Blog = ({ blog }) => {
 			title: blog.title,
 			url: blog.url,
 		}
-		console.log('new', newBlog, 'Old', blog)
 		await blogService.update(newBlog, blog.id)
+	}
+
+	const handleDelete = async () => {
+		if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+			blogService.remove(blog.id)
+		}
 	}
 
 	return (
@@ -32,6 +37,7 @@ const Blog = ({ blog }) => {
 						<button onClick={handleLike}>like</button>
 					</div>
 					<div>{blog.user.name}</div>
+					{isSameUser && <button onClick={handleDelete}>remove</button>}
 				</>
 			)}
 		</div>

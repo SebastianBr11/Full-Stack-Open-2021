@@ -122,7 +122,11 @@ const App = () => {
 				<CreateBlog createBlog={addBlog} />
 			</Togglable>
 			{blogs.map(blog => (
-				<Blog key={blog.id} blog={blog} />
+				<Blog
+					key={blog.id}
+					blog={blog}
+					isSameUser={blog.user.username === user.username}
+				/>
 			))}
 		</div>
 	)
