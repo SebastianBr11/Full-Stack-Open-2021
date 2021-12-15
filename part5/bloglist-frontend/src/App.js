@@ -38,30 +38,30 @@ const App = () => {
 	const loginForm = () => (
 		<div>
 			<h1>log in to application</h1>
-			{successMsg && <Notification message={successMsg} type="success" />}
-			{errorMsg && <Notification message={errorMsg} type="error" />}
+			{successMsg && <Notification message={successMsg} type='success' />}
+			{errorMsg && <Notification message={errorMsg} type='error' />}
 			<form onSubmit={handleLogin}>
 				<div>
 					username
 					<input
-						type="text"
+						type='text'
 						id='username'
 						value={username}
-						name="Username"
+						name='Username'
 						onChange={({ target }) => setUsername(target.value)}
 					/>
 				</div>
 				<div>
 					password
 					<input
-						type="text"
+						type='password'
 						id='password'
 						value={password}
-						name="Password"
+						name='Password'
 						onChange={({ target }) => setPassword(target.value)}
 					/>
 				</div>
-				<button type="submit">login</button>
+				<button type='submit'>login</button>
 			</form>
 		</div>
 	)
@@ -109,7 +109,7 @@ const App = () => {
 		}
 	}
 
-	const handleLike = async (blog) => {
+	const handleLike = async blog => {
 		const newBlog = {
 			user: blog.user.id,
 			likes: blog.likes + 1,
@@ -128,8 +128,8 @@ const App = () => {
 		<div>
 			<div>
 				<h1>blogs</h1>
-				{successMsg && <Notification message={successMsg} type="success" />}
-				{errorMsg && <Notification message={errorMsg} type="error" />}
+				{successMsg && <Notification message={successMsg} type='success' />}
+				{errorMsg && <Notification message={errorMsg} type='error' />}
 				{user.name} logged in
 				<button onClick={handleLogout}>logout</button>
 			</div>
