@@ -1,21 +1,10 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, isSameUser }) => {
+const Blog = ({ blog, isSameUser, handleLike }) => {
 	const [showingMore, setShowingMore] = useState(false)
 
 	const toggleView = () => setShowingMore(prev => !prev)
-
-	const handleLike = async () => {
-		const newBlog = {
-			user: blog.user.id,
-			likes: blog.likes + 1,
-			author: blog.author,
-			title: blog.title,
-			url: blog.url,
-		}
-		await blogService.update(newBlog, blog.id)
-	}
 
 	const handleDelete = async () => {
 		if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {

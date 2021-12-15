@@ -107,6 +107,17 @@ const App = () => {
 		}
 	}
 
+	const handleLike = async (blog) => {
+		const newBlog = {
+			user: blog.user.id,
+			likes: blog.likes + 1,
+			author: blog.author,
+			title: blog.title,
+			url: blog.url,
+		}
+		await blogService.update(newBlog, blog.id)
+	}
+
 	if (user === null) {
 		return loginForm()
 	}
@@ -129,6 +140,7 @@ const App = () => {
 					key={blog.id}
 					blog={blog}
 					isSameUser={blog.user.username === user.username}
+					handleLike={() => handleLike(blog)}
 				/>
 			))}
 		</div>
