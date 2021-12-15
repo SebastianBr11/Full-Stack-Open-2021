@@ -45,6 +45,7 @@ const App = () => {
 					username
 					<input
 						type="text"
+						id='username'
 						value={username}
 						name="Username"
 						onChange={({ target }) => setUsername(target.value)}
@@ -54,6 +55,7 @@ const App = () => {
 					password
 					<input
 						type="text"
+						id='password'
 						value={password}
 						name="Password"
 						onChange={({ target }) => setPassword(target.value)}
