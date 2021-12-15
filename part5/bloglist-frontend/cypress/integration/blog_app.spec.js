@@ -35,4 +35,24 @@ describe('Blog app', function () {
 			)
 		})
 	})
+
+	describe('When logged in', function () {
+		beforeEach(function () {
+			cy.login({ username: 'matt', password: 'corrida' })
+		})
+
+		it('A blog can be created', function () {
+			cy.contains('create new blog').click()
+			cy.get('#title').type('a title')
+			cy.get('#author').type('an author')
+			cy.get('#url').type('http://test.com')
+			cy.get('#submit').click()
+
+			cy.wait(100)
+
+			cy.request('GET', 'http://localhost:3003/api/blogs').then(response =>
+				expect(response.body).to.have.length(1)
+			)
+		})
+	})
 })
