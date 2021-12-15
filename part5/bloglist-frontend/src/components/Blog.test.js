@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/extend-expect'
-import { render, fireEvent, prettyDOM } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
 
 describe('<Blog />', () => {
@@ -30,7 +30,7 @@ describe('<Blog />', () => {
 		const div = component.container.querySelector('.blog > div')
 
 		expect(div).toHaveTextContent(
-			'Test-title test author'
+			blog.title + ' ' + blog.author
 		)
 
 		expect(component.container.childElementCount).toBe(1)
@@ -41,13 +41,11 @@ describe('<Blog />', () => {
 
 		fireEvent.click(button)
 
-		//const div = component.container.querySelectorAll('.blog')[1]
-		const div = component.container.querySelectorAll('div > div')
-		div.forEach(d => console.log(prettyDOM(d)))
+		const urlContainer = component.container.querySelector('.url')
+		expect(urlContainer).toHaveTextContent(blog.url)
 
-		//console.log(prettyDOM(div))
+		const likesContainer = component.container.querySelector('.likes')
+		expect(likesContainer).toHaveTextContent('likes ' + blog.likes)
 
-		// expect(div.children[0].textContent).toBe(blog.url)
-		// expect(div.children[1].textContent).toBe('likes ' + blog.likes)
 	})
 })

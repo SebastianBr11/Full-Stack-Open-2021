@@ -25,18 +25,18 @@ const Blog = ({ blog, isSameUser }) => {
 
 	return (
 		<div className="blog">
-			<div>
+			<div className='details'>
 				{blog.title} {blog.author}
 				<button onClick={toggleView}>{showingMore ? 'hide' : 'view'}</button>
 			</div>
 			{showingMore && (
 				<>
-					<div>{blog.url}</div>
-					<div>
+					<div className='url'>{blog.url}</div>
+					<div className='likes'>
 						likes {blog.likes}
 						<button onClick={handleLike}>like</button>
 					</div>
-					<div>{blog.user.name}</div>
+					<div className='user'>{blog.user.name}</div>
 					{isSameUser && <button onClick={handleDelete}>remove</button>}
 				</>
 			)}
