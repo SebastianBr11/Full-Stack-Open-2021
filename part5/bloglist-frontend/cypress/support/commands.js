@@ -16,7 +16,7 @@ Cypress.Commands.add('login', ({ username, password }) => {
 	})
 })
 
-Cypress.Commands.add('createBlog', ({ title, author, url }) => {
+Cypress.Commands.add('createBlog', ({ title, author, url, likes = 0 }) => {
 	if (!localStorage.getItem('loggedBlogappUser')) return
 
 	const user = JSON.parse(localStorage.getItem('loggedBlogappUser'))
@@ -28,6 +28,7 @@ Cypress.Commands.add('createBlog', ({ title, author, url }) => {
 			title,
 			author,
 			url,
+			likes,
 		},
 		auth: {
 			bearer: user.token,

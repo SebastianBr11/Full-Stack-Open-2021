@@ -57,7 +57,7 @@ describe('Blog app', function () {
 			cy.get('#url').type('http://test.com')
 			cy.get('#submit').click()
 
-			cy.wait(10) // Without wait, the request would not have newest response
+			cy.wait(50) // Without wait, the request would not have newest response
 
 			cy.request('GET', 'http://localhost:3003/api/blogs').then(response =>
 				expect(response.body).to.have.length(1)
@@ -91,7 +91,7 @@ describe('Blog app', function () {
 				cy.get('.details button').click()
 				cy.contains('remove').click()
 
-				cy.wait(10)
+				cy.wait(50)
 
 				cy.request('GET', 'http://localhost:3003/api/blogs').then(response =>
 					expect(response.body).to.have.length(0)
@@ -102,6 +102,29 @@ describe('Blog app', function () {
 				cy.login({ username: 'juan', password: 'engarde' })
 				cy.deleteBlog(blog.id).then(response =>
 					expect(response.status).to.eq(401)
+				)
+			})
+
+			it('the blogs are ordered according to likes with the blog with the most likes being first', function () {
+				const blogs = [5, 2, 4, 3, 1].map(num => ({
+					title: 'title',
+					author: 'author',
+					url: 'http://t.t',
+					likes: num,
+				}))
+
+				const orderedBlogs = [...blogs, blog].sort((a, b) => b.likes - a.likes)
+
+				blogs.forEach(blog => {
+					cy.createBlog(blog)
+				})
+
+				cy.wait(50)
+
+				cy.reload()
+				cy.get('.details button').each(button => button.click())
+				cy.get('.likes > span').each((likeSpan, i) =>
+					cy.wrap(likeSpan).should('have.text', orderedBlogs[i].likes)
 				)
 			})
 		})

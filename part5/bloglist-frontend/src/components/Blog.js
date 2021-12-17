@@ -13,7 +13,7 @@ const Blog = ({ blog, isSameUser, handleLike }) => {
 	}
 
 	return (
-		<div className="blog">
+		<div className='blog'>
 			<div className='details'>
 				{blog.title} {blog.author}
 				<button onClick={toggleView}>{showingMore ? 'hide' : 'view'}</button>
@@ -22,7 +22,7 @@ const Blog = ({ blog, isSameUser, handleLike }) => {
 				<>
 					<div className='url'>{blog.url}</div>
 					<div className='likes'>
-						likes {blog.likes}
+						likes <span>{blog.likes}</span>
 						<button onClick={handleLike}>like</button>
 					</div>
 					<div className='user'>{blog.user.name}</div>
