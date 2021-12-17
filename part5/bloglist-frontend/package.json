@@ -18,7 +18,8 @@
 		"eject": "react-scripts eject",
 		"eslint": "eslint .",
 		"cypress:open": "cypress open",
-		"test:e2e": "cypress run"
+		"test:e2e": "cypress run",
+		"test:e2e:log": "ELECTRON_ENABLE_LOGGING=1 cypress run"
 	},
 	"eslintConfig": {
 		"extends": [

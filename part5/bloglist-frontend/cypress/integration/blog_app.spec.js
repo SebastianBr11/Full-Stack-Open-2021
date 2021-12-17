@@ -54,5 +54,24 @@ describe('Blog app', function () {
 				expect(response.body).to.have.length(1)
 			)
 		})
+
+		describe('When one blog exists', function () {
+			beforeEach(function () {
+				cy.createBlog({
+					title: 'a cool title',
+					author: 'a cool author',
+					url: 'http://cool.com',
+				}).reload() // Need the reload, as the page still displays old blogs
+			})
+
+			it('a blog can be liked', function () {
+				cy.get('.details button').click()
+				cy.get('.likes button').click()
+
+				cy.request('GET', 'http://localhost:3003/api/blogs').then(response =>
+					expect(response.body[0].likes).to.equal(1)
+				)
+			})
+		})
 	})
 })
