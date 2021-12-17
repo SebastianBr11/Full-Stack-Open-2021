@@ -2,8 +2,17 @@ describe('Blog app', function () {
 	beforeEach(function () {
 		cy.request('POST', 'http://localhost:3003/api/testing/reset')
 
-		const user = { name: 'Matt Engarde', username: 'matt', password: 'corrida' }
-		cy.request('POST', 'http://localhost:3003/api/users/', user)
+		cy.createUser({
+			name: 'Matt Engarde',
+			username: 'matt',
+			password: 'corrida',
+		})
+
+		cy.createUser({
+			name: 'Juan Corrida',
+			username: 'juan',
+			password: 'engarde',
+		})
 
 		cy.visit('http://localhost:3000')
 	})
@@ -48,7 +57,7 @@ describe('Blog app', function () {
 			cy.get('#url').type('http://test.com')
 			cy.get('#submit').click()
 
-			cy.wait(100)
+			cy.wait(10) // Without wait, the request would not have newest response
 
 			cy.request('GET', 'http://localhost:3003/api/blogs').then(response =>
 				expect(response.body).to.have.length(1)
@@ -56,12 +65,15 @@ describe('Blog app', function () {
 		})
 
 		describe('When one blog exists', function () {
+			let blogID
 			beforeEach(function () {
 				cy.createBlog({
 					title: 'a cool title',
 					author: 'a cool author',
 					url: 'http://cool.com',
-				}).reload() // Need the reload, as the page still displays old blogs
+				})
+					.then(({ body }) => (blogID = body.id))
+					.reload() // Need the reload, as the page still displays old blogs
 			})
 
 			it('a blog can be liked', function () {
@@ -69,7 +81,25 @@ describe('Blog app', function () {
 				cy.get('.likes button').click()
 
 				cy.request('GET', 'http://localhost:3003/api/blogs').then(response =>
-					expect(response.body[0].likes).to.equal(1)
+					expect(response.body[0].likes).to.eq(1)
+				)
+			})
+
+			it('a blog can be deleted by its creator', function () {
+				cy.get('.details button').click()
+				cy.contains('remove').click()
+
+				cy.wait(10)
+
+				cy.request('GET', 'http://localhost:3003/api/blogs').then(response =>
+					expect(response.body).to.have.length(0)
+				)
+			})
+
+			it('a blog can not be deleted by user who is not creator', function () {
+				cy.login({ username: 'juan', password: 'engarde' })
+				cy.deleteBlog(blogID).then(response =>
+					expect(response.status).to.eq(401)
 				)
 			})
 		})
