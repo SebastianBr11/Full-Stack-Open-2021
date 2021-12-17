@@ -65,14 +65,15 @@ describe('Blog app', function () {
 		})
 
 		describe('When one blog exists', function () {
-			let blogID
+			let blog
+
 			beforeEach(function () {
 				cy.createBlog({
 					title: 'a cool title',
 					author: 'a cool author',
 					url: 'http://cool.com',
 				})
-					.then(({ body }) => (blogID = body.id))
+					.then(({ body }) => (blog = body))
 					.reload() // Need the reload, as the page still displays old blogs
 			})
 
@@ -80,8 +81,9 @@ describe('Blog app', function () {
 				cy.get('.details button').click()
 				cy.get('.likes button').click()
 
+				cy.contains('likes').should('include.text', blog.likes + 1)
 				cy.request('GET', 'http://localhost:3003/api/blogs').then(response =>
-					expect(response.body[0].likes).to.eq(1)
+					expect(response.body[0].likes).to.eq(blog.likes + 1)
 				)
 			})
 
@@ -98,7 +100,7 @@ describe('Blog app', function () {
 
 			it('a blog can not be deleted by user who is not creator', function () {
 				cy.login({ username: 'juan', password: 'engarde' })
-				cy.deleteBlog(blogID).then(response =>
+				cy.deleteBlog(blog.id).then(response =>
 					expect(response.status).to.eq(401)
 				)
 			})

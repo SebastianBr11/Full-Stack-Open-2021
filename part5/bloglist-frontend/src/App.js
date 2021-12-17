@@ -110,6 +110,10 @@ const App = () => {
 	}
 
 	const handleLike = async blog => {
+		setBlogs([
+			...blogs.filter(({ id }) => id !== blog.id),
+			{ ...blog, likes: blog.likes + 1 },
+		])
 		const newBlog = {
 			user: blog.user.id,
 			likes: blog.likes + 1,
