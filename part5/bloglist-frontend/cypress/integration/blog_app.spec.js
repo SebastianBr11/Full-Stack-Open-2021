@@ -1,3 +1,5 @@
+const WAIT_TIME = 100
+
 describe('Blog app', function () {
 	beforeEach(function () {
 		cy.request('POST', 'http://localhost:3003/api/testing/reset')
@@ -40,7 +42,7 @@ describe('Blog app', function () {
 			cy.get('.notification.error').should(
 				'have.css',
 				'color',
-				'rgb(255, 0, 0)'
+				'rgb(255, 0, 0)',
 			)
 		})
 	})
@@ -57,10 +59,10 @@ describe('Blog app', function () {
 			cy.get('#url').type('http://test.com')
 			cy.get('#submit').click()
 
-			cy.wait(50) // Without wait, the request would not have newest response
+			cy.wait(WAIT_TIME) // Without wait, the request would not have newest response
 
 			cy.request('GET', 'http://localhost:3003/api/blogs').then(response =>
-				expect(response.body).to.have.length(1)
+				expect(response.body).to.have.length(1),
 			)
 		})
 
@@ -83,7 +85,7 @@ describe('Blog app', function () {
 
 				cy.contains('likes').should('include.text', blog.likes + 1)
 				cy.request('GET', 'http://localhost:3003/api/blogs').then(response =>
-					expect(response.body[0].likes).to.eq(blog.likes + 1)
+					expect(response.body[0].likes).to.eq(blog.likes + 1),
 				)
 			})
 
@@ -91,17 +93,17 @@ describe('Blog app', function () {
 				cy.get('.details button').click()
 				cy.contains('remove').click()
 
-				cy.wait(50)
+				cy.wait(WAIT_TIME)
 
 				cy.request('GET', 'http://localhost:3003/api/blogs').then(response =>
-					expect(response.body).to.have.length(0)
+					expect(response.body).to.have.length(0),
 				)
 			})
 
 			it('a blog can not be deleted by user who is not creator', function () {
 				cy.login({ username: 'juan', password: 'engarde' })
 				cy.deleteBlog(blog.id).then(response =>
-					expect(response.status).to.eq(401)
+					expect(response.status).to.eq(401),
 				)
 			})
 
@@ -119,12 +121,12 @@ describe('Blog app', function () {
 					cy.createBlog(blog)
 				})
 
-				cy.wait(50)
+				cy.wait(WAIT_TIME)
 
 				cy.reload()
 				cy.get('.details button').each(button => button.click())
 				cy.get('.likes > span').each((likeSpan, i) =>
-					cy.wrap(likeSpan).should('have.text', orderedBlogs[i].likes)
+					cy.wrap(likeSpan).should('have.text', orderedBlogs[i].likes),
 				)
 			})
 		})
