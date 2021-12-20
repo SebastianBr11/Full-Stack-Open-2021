@@ -47,7 +47,6 @@ export const voteAnecdote = id => {
 }
 
 export const addAnecdote = anecdote => {
-	// Already done
 	return {
 		type: 'ADD',
 		data: asObject(anecdote),
