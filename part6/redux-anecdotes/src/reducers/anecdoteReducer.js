@@ -17,6 +17,10 @@ const asObject = anecdote => {
 	}
 }
 
+export const orderByVotes = anecdotes => {
+	return [...anecdotes].sort((a, b) => b.votes - a.votes)
+}
+
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
