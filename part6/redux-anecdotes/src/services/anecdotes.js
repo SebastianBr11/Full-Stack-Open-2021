@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { asObject } from '../reducers/anecdoteReducer'
 
 const baseUrl = 'http://localhost:3001/anecdotes'
 console.log(baseUrl)
