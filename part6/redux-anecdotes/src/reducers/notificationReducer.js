@@ -9,10 +9,19 @@ const reducer = (state = null, action) => {
 	}
 }
 
-export const setNotification = notification => {
-	return {
-		type: 'SET_NOTIFICATION',
-		data: notification,
+let currentTimeout = null
+
+export const setNotification = (notification, timeout) => {
+	return async dispatch => {
+		if (currentTimeout) clearTimeout(currentTimeout)
+		dispatch({
+			type: 'SET_NOTIFICATION',
+			data: notification,
+		})
+		currentTimeout = setTimeout(
+			() => dispatch(removeNotification()),
+			timeout * 1000
+		)
 	}
 }
 
