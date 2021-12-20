@@ -8,15 +8,15 @@
 // ]
 // const initialState = anecdotesAtStart.map(asObject)
 
-const getId = () => (100000 * Math.random()).toFixed(0)
+// const getId = () => (100000 * Math.random()).toFixed(0)
 
-const asObject = anecdote => {
-	return {
-		content: anecdote,
-		id: getId(),
-		votes: 0,
-	}
-}
+// export const asObject = anecdote => {
+// 	return {
+// 		content: anecdote,
+// 		id: getId(),
+// 		votes: 0,
+// 	}
+// }
 
 export const orderByVotes = anecdotes => {
 	return [...anecdotes].sort((a, b) => b.votes - a.votes)
@@ -47,10 +47,10 @@ export const voteAnecdote = id => {
 	}
 }
 
-export const addAnecdote = anecdote => {
+export const addAnecdote = data => {
 	return {
 		type: 'ADD_ANECDOTE',
-		data: asObject(anecdote),
+		data,
 	}
 }
 
