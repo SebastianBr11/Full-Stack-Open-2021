@@ -9,6 +9,7 @@ const reducer = (state = null, action) => {
 	}
 }
 
+// Already done, don't know if a local variable is the best location, but it works
 let currentTimeout = null
 
 export const setNotification = (notification, timeout) => {
