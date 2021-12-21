@@ -1,27 +1,30 @@
 import { useState, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import CreateBlog from './components/CreateBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import { initializeBlogs, addBlog, likeBlog } from './reducers/blogReducer'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
-	const [blogs, setBlogs] = useState([])
+	const blogs = useSelector(state => state.blogs)
+	const wholeState = useSelector(state => state)
+	console.log(wholeState)
+	const dispatch = useDispatch()
+	// const [blogs, setBlogs] = useState([])
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const [user, setUser] = useState(null)
 
-	const [successMsg, setSuccessMsg] = useState(null)
-	const [errorMsg, setErrorMsg] = useState(null)
+	const [notification, setNotification] = useState(null)
 
 	const blogFormRef = useRef()
 
 	useEffect(() => {
 		async function getAndSetBlogs() {
-			const newBlogs = await blogService.getAll()
-			newBlogs.sort((a, b) => b.likes - a.likes)
-			setBlogs(newBlogs)
+			dispatch(initializeBlogs())
 		}
 		getAndSetBlogs()
 	}, [])
@@ -38,8 +41,9 @@ const App = () => {
 	const loginForm = () => (
 		<div>
 			<h1>log in to application</h1>
-			{successMsg && <Notification message={successMsg} type='success' />}
-			{errorMsg && <Notification message={errorMsg} type='error' />}
+			{notification && (
+				<Notification message={notification.msg} type={notification.type} />
+			)}
 			<form onSubmit={handleLogin}>
 				<div>
 					username
@@ -80,12 +84,12 @@ const App = () => {
 			setUser(user)
 			setUsername('')
 			setPassword('')
-			setSuccessMsg('Successfully logged in!')
-			setTimeout(() => setSuccessMsg(null), 5000)
+			setNotification({ type: 'success', msg: 'Successfully logged in !' })
+			setTimeout(() => setNotification(null), 5000)
 		} catch (exception) {
 			console.log('error', exception)
-			setErrorMsg(exception.response.data.error)
-			setTimeout(() => setErrorMsg(null), 5000)
+			setNotification({ type: 'error', msg: exception.response.data.error })
+			setTimeout(() => setNotification(null), 5000)
 		}
 	}
 
@@ -94,34 +98,25 @@ const App = () => {
 		setUser(null)
 	}
 
-	const addBlog = async blog => {
+	const createBlog = async blog => {
 		try {
-			const newBlog = await blogService.create(blog)
 			blogFormRef.current.toggleVisibility()
 
-			setSuccessMsg(`a new blog ${blog.title} by ${blog.author} added`)
-			setTimeout(() => setSuccessMsg(null), 5000)
-			setBlogs(blogs => blogs.concat(newBlog))
+			setNotification({
+				type: 'success',
+				msg: `a new blog ${blog.title} by ${blog.author} added`,
+			})
+			setTimeout(() => setNotification(null), 5000)
+			dispatch(addBlog(blog))
 		} catch (exception) {
 			console.log('error', exception)
-			setErrorMsg(exception.response.data.error)
-			setTimeout(() => setErrorMsg(null), 5000)
+			setNotification({ type: 'error', msg: exception.response.data.error })
+			setTimeout(() => setNotification(null), 5000)
 		}
 	}
 
 	const handleLike = async blog => {
-		setBlogs([
-			...blogs.filter(({ id }) => id !== blog.id),
-			{ ...blog, likes: blog.likes + 1 },
-		])
-		const newBlog = {
-			user: blog.user.id,
-			likes: blog.likes + 1,
-			author: blog.author,
-			title: blog.title,
-			url: blog.url,
-		}
-		await blogService.update(newBlog, blog.id)
+		dispatch(likeBlog(blog.id))
 	}
 
 	if (user === null) {
@@ -132,14 +127,15 @@ const App = () => {
 		<div>
 			<div>
 				<h1>blogs</h1>
-				{successMsg && <Notification message={successMsg} type='success' />}
-				{errorMsg && <Notification message={errorMsg} type='error' />}
+				{notification && (
+					<Notification message={notification.msg} type={notification.type} />
+				)}
 				{user.name} logged in
 				<button onClick={handleLogout}>logout</button>
 			</div>
 			<br />
 			<Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
-				<CreateBlog createBlog={addBlog} />
+				<CreateBlog createBlog={createBlog} />
 			</Togglable>
 			{blogs.map(blog => (
 				<Blog
