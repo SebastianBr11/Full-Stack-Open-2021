@@ -25,23 +25,25 @@ const Blog = ({ blog }) => {
 	const isSameUser = loggedInUser.username === blog.user.username
 
 	return (
-		<div>
+		<div className='text-gray-300'>
 			<h1>
 				{blog.title} {blog.author}
 			</h1>
-			<a href={blog.url} className='url'>
-				{blog.url}
-			</a>
-			<div className='likes'>
-				<span>{blog.likes}</span> likes
-				<button onClick={handleLike}>like</button>
-			</div>
-			<div className='user'>added by {blog.user.name}</div>
+			<p>
+				<a href={blog.url} className='url'>
+					{blog.url}
+				</a>
+				<p className='likes'>
+					<span>{blog.likes}</span> likes
+					<button onClick={handleLike}>like</button>
+				</p>
+				<p className='user'>added by {blog.user.name}</p>
+			</p>
 			{isSameUser && <button onClick={handleDelete}>remove</button>}
 			<div>
 				<h2>comments</h2>
 				<CommentForm blogId={blog.id} />
-				<ul>
+				<ul className='flex flex-col gap-1'>
 					{blog.comments.map((comment, i) => (
 						<li key={`${comment}${i}`}>{comment}</li>
 					))}

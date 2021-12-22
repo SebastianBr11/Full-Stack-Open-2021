@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { resetUser } from '../reducers/loginReducer'
+import Button from './Button'
 
 const NavBar = () => {
 	const dispatch = useDispatch()
@@ -10,7 +11,7 @@ const NavBar = () => {
 		dispatch(resetUser())
 	}
 	return (
-		<nav className='bg-gray'>
+		<nav className='bg-gray-700 rounded-sm px-2'>
 			<ul className='flex items-center  m-0 p-0 p-2 gap-2 list-none'>
 				<li>
 					<Link to='/'>blogs</Link>
@@ -20,7 +21,7 @@ const NavBar = () => {
 				</li>
 				<li>{loggedInUser.name} logged in</li>
 				<li>
-					<button onClick={handleLogout}>logout</button>
+					<Button onClick={handleLogout}>logout</Button>
 				</li>
 			</ul>
 		</nav>

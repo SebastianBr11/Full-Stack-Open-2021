@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import Button from './Button'
 
 const CreateBlog = ({ createBlog }) => {
 	const [title, setTitle] = useState('')
@@ -18,7 +19,7 @@ const CreateBlog = ({ createBlog }) => {
 	return (
 		<div>
 			<h1>create new</h1>
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={handleSubmit} className='flex flex-col'>
 				<div>
 					title:
 					<input
@@ -49,9 +50,9 @@ const CreateBlog = ({ createBlog }) => {
 						onChange={({ target }) => setUrl(target.value)}
 					/>
 				</div>
-				<button id='submit' type='submit'>
+				<Button id='submit' type='submit'>
 					create
-				</button>
+				</Button>
 			</form>
 		</div>
 	)

@@ -9,14 +9,14 @@ const UsersView = () => {
 			<table>
 				<tr>
 					<th></th>
-					<th>blogs created</th>
+					<th className='p-4'>blogs created</th>
 				</tr>
 				{users.map(user => (
 					<tr key={user.id}>
-						<td>
+						<td className='p-4'>
 							<Link to={`/users/${user.id}`}>{user.name}</Link>
 						</td>
-						<td>{user.blogs.length}</td>
+						<td className='p-4'>{user.blogs.length}</td>
 					</tr>
 				))}
 			</table>

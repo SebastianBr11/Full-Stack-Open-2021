@@ -100,7 +100,7 @@ const App = () => {
 	}
 
 	return (
-		<div>
+		<main className='container p-2 m-bl-0'>
 			<NavBar />
 			<h1>blog app</h1>
 			{notification && (
@@ -120,7 +120,7 @@ const App = () => {
 					<BlogView />
 				</Route>
 			</Switch>
-		</div>
+		</main>
 	)
 }
 

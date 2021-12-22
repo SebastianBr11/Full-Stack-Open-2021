@@ -17,12 +17,12 @@ const BlogView = () => {
 	}
 
 	return (
-		<div>
+		<div className='flex flex-col gap-2'>
 			<Togglable buttonLabel={'create new'} ref={blogFormRef}>
 				<CreateBlog createBlog={createBlog} />
 			</Togglable>
 			{blogs.map(blog => (
-				<div key={blog.id} className='blog'>
+				<div key={blog.id} className='blog rounded-sm'>
 					<Link to={`/blogs/${blog.id}`}>
 						{blog.title} {blog.author}
 					</Link>
