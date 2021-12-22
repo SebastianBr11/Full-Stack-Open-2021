@@ -75,7 +75,7 @@ export const likeBlog = id => {
 			dispatch(sortBlogs())
 		} catch (exception) {
 			console.log('error', exception)
-			setErrorNotification(exception.response.data.error, 5)
+			dispatch(setErrorNotification(exception.response.data.error, 5))
 		}
 	}
 }
@@ -89,8 +89,8 @@ export const deleteBlog = id => {
 				payload: { id },
 			})
 		} catch (exception) {
-			console.log('error', exception)
-			setErrorNotification(exception.response.data.error)
+			console.log('error', exception.response.data.error)
+			dispatch(setErrorNotification(exception.response.data.error))
 		}
 	}
 }

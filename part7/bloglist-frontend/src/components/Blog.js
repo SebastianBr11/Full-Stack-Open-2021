@@ -1,36 +1,42 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { deleteBlog } from '../reducers/blogsReducer'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { deleteBlog, likeBlog } from '../reducers/blogsReducer'
 
-const Blog = ({ blog, isSameUser, handleLike }) => {
+const Blog = ({ blog }) => {
+	const loggedInUser = useSelector(state => state.loggedInUser)
+	const history = useHistory()
+
 	const dispatch = useDispatch()
-	const [showingMore, setShowingMore] = useState(false)
-
-	const toggleView = () => setShowingMore(prev => !prev)
 
 	const handleDelete = async () => {
 		if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
 			dispatch(deleteBlog(blog.id))
 		}
+		history.push('/')
 	}
 
+	const handleLike = async () => {
+		dispatch(likeBlog(blog.id))
+	}
+
+	if (!blog) return null
+
+	const isSameUser = loggedInUser.username === blog.user.username
+
 	return (
-		<div className='blog'>
-			<div className='details'>
+		<div>
+			<h1>
 				{blog.title} {blog.author}
-				<button onClick={toggleView}>{showingMore ? 'hide' : 'view'}</button>
+			</h1>
+			<a href={blog.url} className='url'>
+				{blog.url}
+			</a>
+			<div className='likes'>
+				<span>{blog.likes}</span> likes
+				<button onClick={handleLike}>like</button>
 			</div>
-			{showingMore && (
-				<>
-					<div className='url'>{blog.url}</div>
-					<div className='likes'>
-						likes <span>{blog.likes}</span>
-						<button onClick={handleLike}>like</button>
-					</div>
-					<div className='user'>{blog.user.name}</div>
-					{isSameUser && <button onClick={handleDelete}>remove</button>}
-				</>
-			)}
+			<div className='user'>added by {blog.user.name}</div>
+			{isSameUser && <button onClick={handleDelete}>remove</button>}
 		</div>
 	)
 }

@@ -2,13 +2,12 @@ import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Togglable from './Togglable'
 import CreateBlog from './CreateBlog'
-import Blog from './Blog'
-import { addBlog, likeBlog } from '../reducers/blogsReducer'
+import { addBlog } from '../reducers/blogsReducer'
+import { Link } from 'react-router-dom'
 
 const BlogView = () => {
 	const dispatch = useDispatch()
 	const blogs = useSelector(state => state.blogs)
-	const loggedInUser = useSelector(state => state.loggedInUser)
 
 	const blogFormRef = useRef()
 
@@ -17,21 +16,17 @@ const BlogView = () => {
 		blogFormRef.current.toggleVisibility()
 	}
 
-	const handleLike = async blog => {
-		dispatch(likeBlog(blog.id))
-	}
 	return (
 		<div>
 			<Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
 				<CreateBlog createBlog={createBlog} />
 			</Togglable>
 			{blogs.map(blog => (
-				<Blog
-					key={blog.id}
-					blog={blog}
-					isSameUser={blog.user.username === loggedInUser.username}
-					handleLike={() => handleLike(blog)}
-				/>
+				<div key={blog.id} className='blog'>
+					<Link to={`/blogs/${blog.id}`}>
+						{blog.title} {blog.author}
+					</Link>
+				</div>
 			))}
 		</div>
 	)
