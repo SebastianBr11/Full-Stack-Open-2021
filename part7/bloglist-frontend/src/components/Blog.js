@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { deleteBlog, likeBlog } from '../reducers/blogsReducer'
+import CommentForm from './CommentForm'
 
 const Blog = ({ blog }) => {
 	const loggedInUser = useSelector(state => state.loggedInUser)
@@ -39,9 +40,10 @@ const Blog = ({ blog }) => {
 			{isSameUser && <button onClick={handleDelete}>remove</button>}
 			<div>
 				<h2>comments</h2>
+				<CommentForm blogId={blog.id} />
 				<ul>
-					{blog.comments.map(comment => (
-						<li key={comment}>{comment}</li>
+					{blog.comments.map((comment, i) => (
+						<li key={`${comment}${i}`}>{comment}</li>
 					))}
 				</ul>
 			</div>

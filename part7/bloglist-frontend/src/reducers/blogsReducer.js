@@ -12,7 +12,7 @@ const reducer = (state = [], action) => {
 			return [...state, action.payload]
 		case 'UPDATE_BLOG':
 			return state.map(blog =>
-				blog.id === action.payload.id ? { ...blog, ...action.payload } : blog
+				blog.id === action.payload.id ? { ...blog, ...action.payload } : blog,
 			)
 		case 'DELETE_BLOG':
 			return state.filter(blog => blog.id !== action.payload.id)
@@ -52,8 +52,8 @@ export const addBlog = blog => {
 			dispatch(
 				setSuccessNotification(
 					`a new blog ${newBlog.title} by ${newBlog.author} added`,
-					5
-				)
+					5,
+				),
 			)
 		} catch (exception) {
 			console.log('error', exception)
@@ -87,6 +87,21 @@ export const deleteBlog = id => {
 			dispatch({
 				type: 'DELETE_BLOG',
 				payload: { id },
+			})
+		} catch (exception) {
+			console.log('error', exception.response.data.error)
+			dispatch(setErrorNotification(exception.response.data.error))
+		}
+	}
+}
+
+export const commentOnBlog = ({ comment, id }) => {
+	return async dispatch => {
+		try {
+			const newBlog = await blogService.addComment(comment, id)
+			dispatch({
+				type: 'UPDATE_BLOG',
+				payload: { comments: newBlog.comments, id },
 			})
 		} catch (exception) {
 			console.log('error', exception.response.data.error)

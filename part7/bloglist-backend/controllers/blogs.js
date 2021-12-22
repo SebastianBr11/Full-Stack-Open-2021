@@ -81,7 +81,10 @@ blogRouter.put('/:id', async (req, res) => {
 blogRouter.post('/:id/comments', async (req, res) => {
 	const comment = req.body.comment
 
-	const blog = await Blog.findById(req.params.id)
+	const blog = await Blog.findById(req.params.id).populate('user', {
+		username: 1,
+		name: 1,
+	})
 
 	blog.comments = [...blog.comments, comment]
 	const newBlog = await blog.save().catch(err => err)
