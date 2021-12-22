@@ -1,3 +1,7 @@
+import {
+	setErrorNotification,
+	setSuccessNotification,
+} from './notificationReducer'
 import blogService from '../services/blogs'
 
 const reducer = (state = [], action) => {
@@ -34,30 +38,41 @@ export const initializeBlogs = () => {
 
 export const addBlog = blog => {
 	return async dispatch => {
-		const newBlog = await blogService.create(blog)
-		dispatch({
-			type: 'ADD_BLOG',
-			payload: newBlog,
-		})
+		try {
+			const newBlog = await blogService.create(blog)
+			console.log('new', newBlog)
+			dispatch({
+				type: 'ADD_BLOG',
+				payload: newBlog,
+			})
+			dispatch(
+				setSuccessNotification(
+					`a new blog ${newBlog.title} by ${newBlog.author} added`,
+					5
+				)
+			)
+		} catch (exception) {
+			console.log('error', exception)
+			dispatch(setErrorNotification(exception.response.data.error, 5))
+		}
 	}
 }
 
 export const likeBlog = id => {
 	return async (dispatch, getState) => {
 		const blog = getState().blogs.find(blog => blog.id === id)
-		const newBlog = {
-			user: blog.user.id,
-			likes: blog.likes + 1,
-			author: blog.author,
-			title: blog.title,
-			url: blog.url,
+		const blogToUpdate = { ...blog, likes: blog.likes + 1 }
+		try {
+			const newBlog = await blogService.update(blogToUpdate, blog.id)
+			dispatch({
+				type: 'UPDATE_BLOG',
+				payload: newBlog,
+			})
+			dispatch(sortBlogs())
+		} catch (exception) {
+			console.log('error', exception)
+			setErrorNotification(exception.response.data.error, 5)
 		}
-		await blogService.update(newBlog, blog.id)
-		dispatch({
-			type: 'UPDATE_BLOG',
-			payload: { id },
-		})
-		dispatch(sortBlogs())
 	}
 }
 
