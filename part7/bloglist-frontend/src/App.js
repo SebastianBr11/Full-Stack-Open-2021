@@ -5,8 +5,11 @@ import CreateBlog from './components/CreateBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { initializeBlogs, addBlog, likeBlog } from './reducers/blogReducer'
-import { setNotification } from './reducers/notificationReducer'
-import blogService from './services/blogs'
+import {
+	setErrorNotification,
+	setSuccessNotification,
+} from './reducers/notificationReducer'
+import { resetUser, setUser, initUser } from './reducers/userReducer'
 import loginService from './services/login'
 
 const App = () => {
@@ -18,23 +21,15 @@ const App = () => {
 
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
-	const [user, setUser] = useState(null)
 
 	const blogFormRef = useRef()
 
 	useEffect(() => {
-		async function getAndSetBlogs() {
-			dispatch(initializeBlogs())
-		}
-		getAndSetBlogs()
+		dispatch(initializeBlogs())
 	}, [])
 
 	useEffect(() => {
-		const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-		if (loggedUserJSON) {
-			const user = JSON.parse(loggedUserJSON)
-			setUser(user)
-		}
+		dispatch(initUser())
 	}, [])
 
 	const loginForm = () => (
@@ -79,24 +74,19 @@ const App = () => {
 			})
 
 			window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-			blogService.setToken(user.token)
-			setUser(user)
+			dispatch(setUser(user))
 			setUsername('')
 			setPassword('')
-			dispatch(
-				setNotification({ type: 'success', msg: 'Successfully logged in !' })
-			)
+			dispatch(setSuccessNotification('Successfully logged in !'))
 		} catch (exception) {
 			console.log('error', exception)
-			dispatch(
-				setNotification({ type: 'error', msg: exception.response.data.error })
-			)
+			dispatch(setErrorNotification(exception.response.data.error))
 		}
 	}
 
 	const handleLogout = () => {
 		window.localStorage.clear()
-		setUser(null)
+		dispatch(resetUser())
 	}
 
 	const createBlog = async blog => {
