@@ -1,14 +1,16 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
+import { useDispatch } from 'react-redux'
+import { deleteBlog } from '../reducers/blogReducer'
 
 const Blog = ({ blog, isSameUser, handleLike }) => {
+	const dispatch = useDispatch()
 	const [showingMore, setShowingMore] = useState(false)
 
 	const toggleView = () => setShowingMore(prev => !prev)
 
 	const handleDelete = async () => {
 		if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-			blogService.remove(blog.id)
+			dispatch(deleteBlog(blog.id))
 		}
 	}
 

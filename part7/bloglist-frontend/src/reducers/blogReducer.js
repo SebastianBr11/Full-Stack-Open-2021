@@ -11,7 +11,11 @@ const reducer = (state = [], action) => {
 		case 'ADD_BLOG':
 			return [...state, action.payload]
 		case 'UPDATE_BLOG':
-			return state.map(a => (a.id === action.payload.id ? action.payload : a))
+			return state.map(blog =>
+				blog.id === action.payload.id ? action.payload : blog
+			)
+		case 'DELETE_BLOG':
+			return state.filter(blog => blog.id !== action.payload.id)
 		case 'SORT_BLOGS':
 			return [...state].sort((a, b) => b.likes - a.likes)
 		default:
@@ -72,6 +76,21 @@ export const likeBlog = id => {
 		} catch (exception) {
 			console.log('error', exception)
 			setErrorNotification(exception.response.data.error, 5)
+		}
+	}
+}
+
+export const deleteBlog = id => {
+	return async dispatch => {
+		try {
+			await blogService.remove(id)
+			dispatch({
+				type: 'DELETE_BLOG',
+				payload: { id },
+			})
+		} catch (exception) {
+			console.log('error', exception)
+			setErrorNotification(exception.response.data.error)
 		}
 	}
 }
