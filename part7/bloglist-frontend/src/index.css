@@ -1,30 +1,66 @@
 .notification {
-  background: lightgrey;
-  font-size: 20px;
-  border-style: solid;
-  border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 10px;
+	background: lightgrey;
+	font-size: 20px;
+	border-style: solid;
+	border-radius: 5px;
+	padding: 10px;
+	margin-bottom: 10px;
 }
 
 .success {
-  color: green;
+	color: green;
 }
 
 .error {
-  color: red;
+	color: red;
 }
 
 .hidden {
-  display: none;
+	display: none;
 }
 
 .blog {
-  padding-top: 10px;
-  padding-left: 2px;
-  border: 1px solid currentColor;
+	padding-top: 10px;
+	padding-left: 2px;
+	border: 1px solid currentColor;
 }
 
 .blog + .blog {
-  margin-top: 5px;
+	margin-top: 5px;
+}
+
+.flex {
+	display: flex;
+}
+
+.items-center {
+	align-items: center;
+}
+
+.justify-center {
+	justify-content: center;
+}
+
+.gap-2 {
+	gap: 1rem;
+}
+
+.bg-gray {
+	background-color: lightgray;
+}
+
+.m-0 {
+	margin: 0;
+}
+
+.p-0 {
+	padding: 0;
+}
+
+.p-2 {
+	padding: 0.5rem;
+}
+
+.list-none {
+	list-style-type: none;
 }

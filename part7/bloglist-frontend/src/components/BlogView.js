@@ -18,7 +18,7 @@ const BlogView = () => {
 
 	return (
 		<div>
-			<Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
+			<Togglable buttonLabel={'create new'} ref={blogFormRef}>
 				<CreateBlog createBlog={createBlog} />
 			</Togglable>
 			{blogs.map(blog => (

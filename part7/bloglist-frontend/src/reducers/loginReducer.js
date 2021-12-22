@@ -31,6 +31,9 @@ export const initUser = () => {
 	}
 }
 
-export const resetUser = () => ({ type: 'RESET_LOGIN_USER' })
+export const resetUser = () => {
+	window.localStorage.clear()
+	return { type: 'RESET_LOGIN_USER' }
+}
 
 export default reducer

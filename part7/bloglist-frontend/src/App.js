@@ -7,13 +7,14 @@ import {
 	setErrorNotification,
 	setSuccessNotification,
 } from './reducers/notificationReducer'
-import { resetUser, setUser, initUser } from './reducers/loginReducer'
+import { setUser, initUser } from './reducers/loginReducer'
 import loginService from './services/login'
 import { initializeUsers } from './reducers/usersReducer'
 import UsersView from './components/UsersView'
 import BlogView from './components/BlogView'
 import UserInfo from './components/UserInfo'
 import Blog from './components/Blog'
+import NavBar from './components/NavBar'
 
 const App = () => {
 	const blogs = useSelector(state => state.blogs)
@@ -94,25 +95,17 @@ const App = () => {
 		}
 	}
 
-	const handleLogout = () => {
-		window.localStorage.clear()
-		dispatch(resetUser())
-	}
-
 	if (loggedInUser === null) {
 		return loginForm()
 	}
 
 	return (
 		<div>
-			<div>
-				<h1>blogs</h1>
-				{notification && (
-					<Notification message={notification.msg} type={notification.type} />
-				)}
-				<p>{loggedInUser.name} logged in</p>
-				<button onClick={handleLogout}>logout</button>
-			</div>
+			<NavBar />
+			<h1>blog app</h1>
+			{notification && (
+				<Notification message={notification.msg} type={notification.type} />
+			)}
 			<Switch>
 				<Route path='/users/:id'>
 					<UserInfo user={matchedUser} />
