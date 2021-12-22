@@ -25,6 +25,7 @@ blogRouter.post('/', userExtractor, async (request, response) => {
 
 	const blog = new Blog(newBlog)
 	const result = await blog.save()
+	await result.populate('user', { username: 1, name: 1 }).execPopulate()
 
 	user.blogs = user.blogs.concat(result._id)
 	await user.save()
@@ -73,8 +74,6 @@ blogRouter.put('/:id', async (req, res) => {
 	if (!newPost) {
 		return res.status(404).end()
 	}
-
-	console.log('like post', newPost)
 
 	res.json(newPost)
 })
