@@ -1,22 +1,15 @@
-import { useSelector } from 'react-redux'
+const UserInfo = ({ user }) => {
+	if (!user) return null
 
-const UserInfo = () => {
-	const users = useSelector(state => state.users)
 	return (
 		<div>
-			<h1>Users</h1>
-			<table>
-				<tr>
-					<th></th>
-					<th>blogs created</th>
-				</tr>
-				{users.map(user => (
-					<tr key={user.id}>
-						<td>{user.name}</td>
-						<td>{user.blogs.length}</td>
-					</tr>
+			<h1>{user.name}</h1>
+			<h2>added blogs</h2>
+			<ul>
+				{user.blogs.map(blog => (
+					<li key={blog.id}>{blog.title}</li>
 				))}
-			</table>
+			</ul>
 		</div>
 	)
 }

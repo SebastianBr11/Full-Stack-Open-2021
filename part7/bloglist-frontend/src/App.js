@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import Notification from './components/Notification'
 import { initializeBlogs } from './reducers/blogsReducer'
 import {
@@ -10,14 +10,21 @@ import {
 import { resetUser, setUser, initUser } from './reducers/loginReducer'
 import loginService from './services/login'
 import { initializeUsers } from './reducers/usersReducer'
-import UserInfo from './components/UserInfo'
+import UsersView from './components/UsersView'
 import BlogView from './components/BlogView'
+import UserInfo from './components/UserInfo'
 
 const App = () => {
+	const users = useSelector(state => state.users)
 	const notification = useSelector(state => state.notification)
 	const loggedInUser = useSelector(state => state.loggedInUser)
 
 	const dispatch = useDispatch()
+
+	const match = useRouteMatch('/users/:id')
+	const matchedUser = match
+		? users.find(user => user.id === match.params.id)
+		: null
 
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
@@ -100,8 +107,11 @@ const App = () => {
 				<button onClick={handleLogout}>logout</button>
 			</div>
 			<Switch>
+				<Route path='/users/:id'>
+					<UserInfo user={matchedUser} />
+				</Route>
 				<Route path='/users'>
-					<UserInfo />
+					<UsersView />
 				</Route>
 				<Route path='/'>
 					<BlogView />
