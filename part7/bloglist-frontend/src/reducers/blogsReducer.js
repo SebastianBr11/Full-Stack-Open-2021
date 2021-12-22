@@ -12,7 +12,7 @@ const reducer = (state = [], action) => {
 			return [...state, action.payload]
 		case 'UPDATE_BLOG':
 			return state.map(blog =>
-				blog.id === action.payload.id ? action.payload : blog
+				blog.id === action.payload.id ? { ...blog, ...action.payload } : blog
 			)
 		case 'DELETE_BLOG':
 			return state.filter(blog => blog.id !== action.payload.id)
@@ -70,7 +70,7 @@ export const likeBlog = id => {
 			const newBlog = await blogService.update(blogToUpdate, blog.id)
 			dispatch({
 				type: 'UPDATE_BLOG',
-				payload: newBlog,
+				payload: { likes: newBlog.likes, id },
 			})
 			dispatch(sortBlogs())
 		} catch (exception) {
