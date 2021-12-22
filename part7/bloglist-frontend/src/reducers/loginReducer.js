@@ -2,9 +2,9 @@ import blogService from '../services/blogs'
 
 const reducer = (state = null, action) => {
 	switch (action.type) {
-		case 'SET_USER':
+		case 'SET_LOGIN_USER':
 			return action.payload
-		case 'RESET_USER':
+		case 'RESET_LOGIN_USER':
 			return null
 		default:
 			return state
@@ -14,7 +14,7 @@ const reducer = (state = null, action) => {
 export const setUser = user => {
 	blogService.setToken(user.token)
 	return {
-		type: 'SET_USER',
+		type: 'SET_LOGIN_USER',
 		payload: user,
 	}
 }
@@ -26,12 +26,11 @@ export const initUser = () => {
 		user = JSON.parse(loggedUserJSON)
 	}
 	return {
-		type: 'SET_USER',
-		payload: user
+		type: 'SET_LOGIN_USER',
+		payload: user,
 	}
 }
 
-
-export const resetUser = () => ({ type: 'RESET_USER' })
+export const resetUser = () => ({ type: 'RESET_LOGIN_USER' })
 
 export default reducer

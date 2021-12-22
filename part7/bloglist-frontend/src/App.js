@@ -1,35 +1,31 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import Blog from './components/Blog'
-import CreateBlog from './components/CreateBlog'
+import { Switch, Route } from 'react-router-dom'
 import Notification from './components/Notification'
-import Togglable from './components/Togglable'
-import { initializeBlogs, addBlog, likeBlog } from './reducers/blogReducer'
+import { initializeBlogs } from './reducers/blogsReducer'
 import {
 	setErrorNotification,
 	setSuccessNotification,
 } from './reducers/notificationReducer'
-import { resetUser, setUser, initUser } from './reducers/userReducer'
+import { resetUser, setUser, initUser } from './reducers/loginReducer'
 import loginService from './services/login'
+import { initializeUsers } from './reducers/usersReducer'
+import UserInfo from './components/UserInfo'
+import BlogView from './components/BlogView'
 
 const App = () => {
-	const blogs = useSelector(state => state.blogs)
 	const notification = useSelector(state => state.notification)
-	const user = useSelector(state => state.user)
+	const loggedInUser = useSelector(state => state.loggedInUser)
 
 	const dispatch = useDispatch()
 
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 
-	const blogFormRef = useRef()
-
-	useEffect(() => {
-		dispatch(initializeBlogs())
-	}, [])
-
 	useEffect(() => {
 		dispatch(initUser())
+		dispatch(initializeBlogs())
+		dispatch(initializeUsers())
 	}, [])
 
 	const loginForm = () => (
@@ -89,16 +85,7 @@ const App = () => {
 		dispatch(resetUser())
 	}
 
-	const createBlog = async blog => {
-		dispatch(addBlog(blog))
-		blogFormRef.current.toggleVisibility()
-	}
-
-	const handleLike = async blog => {
-		dispatch(likeBlog(blog.id))
-	}
-
-	if (user === null) {
+	if (loggedInUser === null) {
 		return loginForm()
 	}
 
@@ -109,21 +96,17 @@ const App = () => {
 				{notification && (
 					<Notification message={notification.msg} type={notification.type} />
 				)}
-				{user.name} logged in
+				<p>{loggedInUser.name} logged in</p>
 				<button onClick={handleLogout}>logout</button>
 			</div>
-			<br />
-			<Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
-				<CreateBlog createBlog={createBlog} />
-			</Togglable>
-			{blogs.map(blog => (
-				<Blog
-					key={blog.id}
-					blog={blog}
-					isSameUser={blog.user.username === user.username}
-					handleLike={() => handleLike(blog)}
-				/>
-			))}
+			<Switch>
+				<Route path='/users'>
+					<UserInfo />
+				</Route>
+				<Route path='/'>
+					<BlogView />
+				</Route>
+			</Switch>
 		</div>
 	)
 }
