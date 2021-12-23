@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { deleteBlog, likeBlog } from '../reducers/blogsReducer'
+import Button from './Button'
 import CommentForm from './CommentForm'
 
 const Blog = ({ blog }) => {
@@ -12,8 +13,8 @@ const Blog = ({ blog }) => {
 	const handleDelete = async () => {
 		if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
 			dispatch(deleteBlog(blog.id))
+			history.push('/')
 		}
-		history.push('/')
 	}
 
 	const handleLike = async () => {
@@ -29,17 +30,21 @@ const Blog = ({ blog }) => {
 			<h1>
 				{blog.title} {blog.author}
 			</h1>
-			<p>
-				<a href={blog.url} className='url'>
-					{blog.url}
-				</a>
-				<p className='likes'>
-					<span>{blog.likes}</span> likes
-					<button onClick={handleLike}>like</button>
-				</p>
-				<p className='user'>added by {blog.user.name}</p>
+			<a href={blog.url} target='_blank' rel='noreferrer' className='url'>
+				{blog.url}
+			</a>
+			<p className='likes'>
+				<span>{blog.likes}</span> likes
+				<Button className='m-2' onClick={handleLike}>
+					like
+				</Button>
 			</p>
-			{isSameUser && <button onClick={handleDelete}>remove</button>}
+			<p className='user'>added by {blog.user.name}</p>
+			{isSameUser && (
+				<Button look='dangerous' className='mt-4' onClick={handleDelete}>
+					remove
+				</Button>
+			)}
 			<div>
 				<h2>comments</h2>
 				<CommentForm blogId={blog.id} />

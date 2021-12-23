@@ -1,5 +1,7 @@
 import { useDispatch } from 'react-redux'
 import { commentOnBlog } from '../reducers/blogsReducer'
+import Button from './Button'
+import Input from './Input'
 
 const CommentForm = ({ blogId }) => {
 	const dispatch = useDispatch()
@@ -12,8 +14,8 @@ const CommentForm = ({ blogId }) => {
 	}
 	return (
 		<form onSubmit={submitHandler}>
-			<input type='text' name='comment' />
-			<button>add comment</button>
+			<Input type='text' name='comment' />
+			<Button className='ml-2'>add comment</Button>
 		</form>
 	)
 }

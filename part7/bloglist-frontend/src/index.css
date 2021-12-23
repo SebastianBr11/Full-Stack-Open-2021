@@ -6,12 +6,17 @@
 
 :root {
 	--gray-900: 250 10% 15%;
+	--gray-850: 250 10% 20%;
 	--gray-800: 250 10% 25%;
 	--gray-750: 250 10% 30%;
 	--gray-700: 250 10% 35%;
 	--gray-300: 250 10% 75%;
 	--gray-200: 250 10% 85%;
 	--blue-200: 210 100% 85%;
+	--green-500: 100 100% 65%;
+	--green-300: 100 100% 85%;
+	--orange-500: 30 100% 60%;
+	--orange-300: 30 100% 80%;
 }
 
 body {
@@ -47,7 +52,7 @@ tr {
 	background-color: hsl(var(--gray-800));
 }
 
-tr:nth-child(even) {
+tbody > tr:nth-child(odd) {
 	background-color: hsl(var(--gray-700));
 }
 
@@ -61,7 +66,7 @@ tr:nth-child(even) {
 }
 
 .success {
-	color: green;
+	color: hsl(var(--green-300));
 }
 
 .error {
@@ -83,12 +88,24 @@ tr:nth-child(even) {
 	margin-inline: auto;
 }
 
+.block {
+	display: block;
+}
+
+.grid {
+	display: grid;
+}
+
 .flex {
 	display: flex;
 }
 
 .flex-col {
 	flex-direction: column;
+}
+
+.grow-1 {
+	flex-grow: 1;
 }
 
 .items-center {
@@ -123,12 +140,36 @@ tr:nth-child(even) {
 	color: hsl(var(--gray-300));
 }
 
+.bg-gray-850 {
+	background-color: hsl(var(--gray-850));
+}
+
 .bg-gray-700 {
 	background-color: hsl(var(--gray-700));
 }
 
 .m-0 {
 	margin: 0;
+}
+
+.m-2 {
+	margin: 0.5rem;
+}
+
+.mt-2 {
+	margin-top: 0.5rem;
+}
+
+.mt-4 {
+	margin-top: 1rem;
+}
+
+.mt-8 {
+	margin-top: 2rem;
+}
+
+.ml-2 {
+	margin-left: 0.5rem;
 }
 
 .m-bl-0 {

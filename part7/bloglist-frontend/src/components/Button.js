@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 const Button = styled.button`
 	cursor: pointer;
@@ -14,6 +14,20 @@ const Button = styled.button`
 	&:hover {
 		background-color: hsl(var(--gray-750));
 	}
+	${({ look }) => {
+		switch (look) {
+			case 'dangerous':
+				return css`
+					color: hsl(var(--orange-500));
+					border: 1px solid hsl(var(--orange-500));
+				`
+			case 'success':
+				return css`
+					color: hsl(var(--green-500));
+					border: 1px solid hsl(var(--green-500));
+				`
+		}
+	}}
 `
 
 export default Button

@@ -15,6 +15,8 @@ import BlogView from './components/BlogView'
 import UserInfo from './components/UserInfo'
 import Blog from './components/Blog'
 import NavBar from './components/NavBar'
+import Button from './components/Button'
+import Input from './components/Input'
 
 const App = () => {
 	const blogs = useSelector(state => state.blogs)
@@ -44,7 +46,7 @@ const App = () => {
 	}, [])
 
 	const loginForm = () => (
-		<div>
+		<div className='container'>
 			<h1>log in to application</h1>
 			{notification && (
 				<Notification message={notification.msg} type={notification.type} />
@@ -52,7 +54,7 @@ const App = () => {
 			<form onSubmit={handleLogin}>
 				<div>
 					username
-					<input
+					<Input
 						type='text'
 						id='username'
 						value={username}
@@ -62,7 +64,7 @@ const App = () => {
 				</div>
 				<div>
 					password
-					<input
+					<Input
 						type='password'
 						id='password'
 						value={password}
@@ -70,7 +72,9 @@ const App = () => {
 						onChange={({ target }) => setPassword(target.value)}
 					/>
 				</div>
-				<button type='submit'>login</button>
+				<Button className='mt-2' type='submit'>
+					login
+				</Button>
 			</form>
 		</div>
 	)

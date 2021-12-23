@@ -24,6 +24,7 @@ export const initUser = () => {
 	let user = null
 	if (loggedUserJSON) {
 		user = JSON.parse(loggedUserJSON)
+		blogService.setToken(user.token)
 	}
 	return {
 		type: 'SET_LOGIN_USER',

@@ -3,6 +3,7 @@ import {
 	setSuccessNotification,
 } from './notificationReducer'
 import blogService from '../services/blogs'
+import { addBlogToUser } from './usersReducer'
 
 const reducer = (state = [], action) => {
 	switch (action.type) {
@@ -44,11 +45,11 @@ export const addBlog = blog => {
 	return async dispatch => {
 		try {
 			const newBlog = await blogService.create(blog)
-			console.log('new', newBlog)
 			dispatch({
 				type: 'ADD_BLOG',
 				payload: newBlog,
 			})
+			dispatch(addBlogToUser({ blog: newBlog, userId: newBlog.user.id }))
 			dispatch(
 				setSuccessNotification(
 					`a new blog ${newBlog.title} by ${newBlog.author} added`,
