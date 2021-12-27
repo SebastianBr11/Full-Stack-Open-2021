@@ -1,5 +1,4 @@
 import React from 'react'
-
 import { gql, useQuery } from '@apollo/client'
 
 const ALL_AUTHORS = gql`
