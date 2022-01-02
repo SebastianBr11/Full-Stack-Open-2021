@@ -65,7 +65,7 @@ const resolvers = {
 			if (author) {
 				author.born = args.setBornTo
 				try {
-					return await author.save()
+					return await author.save({})
 				} catch (error) {
 					throw new UserInputError(error.message, {
 						invalidArgs: args,
@@ -104,7 +104,7 @@ const resolvers = {
 
 	Author: {
 		bookCount: async root => {
-			return await Book.count({ author: root.id })
+			return await Book.countDocuments({ author: root.id })
 		},
 	},
 }
