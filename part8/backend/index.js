@@ -1,5 +1,11 @@
 require('dotenv').config()
-const { ApolloServer } = require('apollo-server')
+const { ApolloServer } = require('apollo-server-express')
+const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core')
+const express = require('express')
+const http = require('http')
+const { execute, subscribe } = require('graphql')
+const { SubscriptionServer } = require('subscriptions-transport-ws')
+const { makeExecutableSchema } = require('@graphql-tools/schema')
 const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const typeDefs = require('./typeDefs')
@@ -20,9 +26,36 @@ mongoose
 	.then(() => console.log('connected to mongodb'))
 	.catch(err => console.error(err))
 
+const app = express()
+const httpServer = http.createServer(app)
+
+const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+const subscriptionServer = SubscriptionServer.create(
+	{
+		schema,
+		execute,
+		subscribe,
+	},
+	{
+		server: httpServer,
+		path: '/graphql',
+	}
+)
+
 const server = new ApolloServer({
-	typeDefs,
-	resolvers,
+	schema,
+	plugins: [
+		{
+			async serverWillStart() {
+				return {
+					async drainServer() {
+						subscriptionServer.close()
+					},
+				}
+			},
+		},
+	],
 	context: async ({ req }) => {
 		const auth = req ? req.headers.authorization : null
 
@@ -34,6 +67,13 @@ const server = new ApolloServer({
 	},
 })
 
-server.listen().then(({ url }) => {
-	console.log(`Server ready at ${url}`)
+server.start().then(() => {
+	server.applyMiddleware({
+		app,
+	})
+
+	const PORT = 4000
+	httpServer.listen(PORT, () => {
+		console.log(`Server ready at http://localhost:${PORT}/graphql`)
+	})
 })

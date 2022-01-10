@@ -1,8 +1,11 @@
-const { UserInputError, AuthenticationError } = require('apollo-server')
+const { UserInputError, AuthenticationError } = require('apollo-server-express')
 const jwt = require('jsonwebtoken')
+const { PubSub } = require('graphql-subscriptions')
 const Book = require('./models/book')
 const Author = require('./models/author')
 const User = require('./models/user')
+
+const pubsub = new PubSub()
 
 const JWT_SECRET = process.env.SECRET
 
@@ -16,17 +19,26 @@ const resolvers = {
 			}
 
 			if (args.author && args.genre) {
-				return books.filter(byAuthor).filter(byGenre)
+				const author = await Author.findOne({ name: args.author })
+				if (!author) throw new UserInputError('Author was not found')
+
+				return await Book.find({
+					genres: { $in: args.genre },
+					author: author.id,
+				}).populate('author')
 			}
 
 			if (args.genre) {
 				return await Book.find({ genres: { $in: args.genre } }).populate(
-					'author',
+					'author'
 				)
 			}
 
 			if (args.author) {
-				return books.filter(byAuthor)
+				const author = await Author.findOne({ name: args.author })
+				if (!author) throw new UserInputError('Author was not found')
+
+				return await Book.find({ author: author.id }).populate('author')
 			}
 
 			return []
@@ -49,7 +61,10 @@ const resolvers = {
 				}
 
 				const book = new Book({ ...args, author })
-				return await book.save()
+				await book.save()
+
+				pubsub.publish('BOOK_ADDED', { bookAdded: book })
+				return book
 			} catch (error) {
 				throw new UserInputError(error.message, {
 					invalidArgs: args,
@@ -105,6 +120,12 @@ const resolvers = {
 	Author: {
 		bookCount: async root => {
 			return await Book.countDocuments({ author: root.id })
+		},
+	},
+
+	Subscription: {
+		bookAdded: {
+			subscribe: () => pubsub.asyncIterator(['BOOK_ADDED']),
 		},
 	},
 }
