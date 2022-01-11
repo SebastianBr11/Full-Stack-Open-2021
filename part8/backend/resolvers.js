@@ -43,7 +43,11 @@ const resolvers = {
 
 			return []
 		},
-		allAuthors: async () => await Author.find({}),
+		allAuthors: async () => {
+			console.log('Author.find')
+			const authors = await Author.find({}).populate('books')
+			return authors
+		},
 		me: (root, args, context) => context.currentUser,
 	},
 
@@ -62,6 +66,8 @@ const resolvers = {
 
 				const book = new Book({ ...args, author })
 				await book.save()
+				author.books.push(book)
+				await author.save()
 
 				pubsub.publish('BOOK_ADDED', { bookAdded: book })
 				return book
@@ -118,9 +124,7 @@ const resolvers = {
 	},
 
 	Author: {
-		bookCount: async root => {
-			return await Book.countDocuments({ author: root.id })
-		},
+		bookCount: root => root.books.length,
 	},
 
 	Subscription: {

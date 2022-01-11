@@ -11,6 +11,7 @@ const Books = props => {
 	useEffect(() => {
 		const run = async () => {
 			const result = await getBooks({ variables: { genre: genreFilter } })
+			console.log(result)
 
 			if (allGenres.length === 0) {
 				setAllGenres([

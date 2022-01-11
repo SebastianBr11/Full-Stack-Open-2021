@@ -6,7 +6,7 @@ import SetAuthorYear from './SetAuthorYear'
 const Authors = props => {
 	const result = useQuery(ALL_AUTHORS)
 
-	if (!props.show) {
+	if (!props.show || !result.data) {
 		return null
 	}
 
