@@ -1,6 +1,5 @@
 require('dotenv').config()
 const { ApolloServer } = require('apollo-server-express')
-const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core')
 const express = require('express')
 const http = require('http')
 const { execute, subscribe } = require('graphql')
@@ -32,15 +31,8 @@ const httpServer = http.createServer(app)
 const schema = makeExecutableSchema({ typeDefs, resolvers })
 
 const subscriptionServer = SubscriptionServer.create(
-	{
-		schema,
-		execute,
-		subscribe,
-	},
-	{
-		server: httpServer,
-		path: '/graphql',
-	}
+	{ schema, execute, subscribe },
+	{ server: httpServer, path: '/graphql' }
 )
 
 const server = new ApolloServer({
