@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { ALL_AUTHORS, ALL_BOOKS, BOOKS_BY_GENRE, CREATE_BOOK } from '../queries'
+import { ALL_AUTHORS, BOOKS_BY_GENRE, CREATE_BOOK } from '../queries'
 
 const NewBook = props => {
 	const [createBook] = useMutation(CREATE_BOOK, {
@@ -9,7 +9,6 @@ const NewBook = props => {
 				query: BOOKS_BY_GENRE,
 				variables: { genre: '' },
 			})
-			console.log(bookDataInStore, response.data)
 
 			store.writeQuery({
 				query: BOOKS_BY_GENRE,
@@ -20,7 +19,6 @@ const NewBook = props => {
 			})
 
 			const authorDataInStore = store.readQuery({ query: ALL_AUTHORS })
-			console.log(authorDataInStore)
 			store.writeQuery({
 				query: ALL_AUTHORS,
 				data: {

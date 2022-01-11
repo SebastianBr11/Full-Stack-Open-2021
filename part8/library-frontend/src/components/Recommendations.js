@@ -8,12 +8,12 @@ const Recommendations = ({ show }) => {
 	const [getBooks, bookResult] = useLazyQuery(BOOKS_BY_GENRE)
 
 	useEffect(() => {
-		if (meLoading) return
+		if (meLoading || !meData.me) return
 
 		getBooks({ variables: { genre: meData.me.favoriteGenre } })
 	}, [meLoading, meData])
 
-	if (!show) {
+	if (!show || !meData.me) {
 		return null
 	}
 
