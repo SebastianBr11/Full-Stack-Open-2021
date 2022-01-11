@@ -5,18 +5,46 @@ import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import { useApolloClient, useSubscription } from '@apollo/client'
 import Recommendations from './components/Recommendations'
-import { BOOK_ADDED } from './queries'
+import { ALL_AUTHORS, BOOKS_BY_GENRE, BOOK_ADDED } from './queries'
 
 const App = () => {
 	const [page, setPage] = useState('authors')
 	const [token, setToken] = useState(null)
 	const client = useApolloClient()
 
+	const updateCacheWith = addedBook => {
+		const includedIn = (list, obj) => list.map(p => p.id).includes(obj.id)
+
+		const bookDataInStore = client.readQuery({
+			query: BOOKS_BY_GENRE,
+			variables: { genre: '' },
+		})
+
+		if (!includedIn(bookDataInStore.books, addedBook)) {
+			client.writeQuery({
+				query: BOOKS_BY_GENRE,
+				data: {
+					books: [...bookDataInStore.books, addedBook],
+				},
+			})
+		}
+
+		const authorDataInStore = client.readQuery({ query: ALL_AUTHORS })
+		if (!includedIn(authorDataInStore.authors, addedBook.author)) {
+			client.writeQuery({
+				query: ALL_AUTHORS,
+				data: {
+					authors: [...authorDataInStore.authors, addedBook.author],
+				},
+			})
+		}
+	}
+
 	useSubscription(BOOK_ADDED, {
 		onSubscriptionData: ({ subscriptionData }) => {
-			window.alert(
-				`A new book with title ${subscriptionData.data.bookAdded.title} was added`
-			)
+			const addedBook = subscriptionData.data.bookAdded
+			window.alert(`A new book with title ${addedBook.title} was added`)
+			updateCacheWith(addedBook)
 		},
 	})
 
@@ -59,7 +87,10 @@ const App = () => {
 				show={page === 'login'}
 			/>
 
-			<NewBook show={page === 'add' && !!token} />
+			<NewBook
+				show={page === 'add' && !!token}
+				updateCacheWith={updateCacheWith}
+			/>
 
 			<Recommendations show={page === 'recommend' && !!token} />
 		</div>

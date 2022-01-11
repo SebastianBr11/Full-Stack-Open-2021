@@ -1,6 +1,6 @@
-import { useLazyQuery, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
-import { LOGIN, ME } from '../queries'
+import { LOGIN } from '../queries'
 
 const LoginForm = ({ show, setToken, setPage }) => {
 	const [username, setUsername] = useState('')
