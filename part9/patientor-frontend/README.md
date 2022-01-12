@@ -1,3 +1,7 @@
+# [Because of an error I had to follow these helpful comments](https://stackoverflow.com/questions/70357360/process-is-not-defined-on-hot-reload/70374227)
+
+[https://stackoverflow.com/questions/70357360/process-is-not-defined-on-hot-reload/70374227](https://stackoverflow.com/questions/70357360/process-is-not-defined-on-hot-reload/70374227)
+
 # Patientor - frontend
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
