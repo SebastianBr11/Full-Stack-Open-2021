@@ -34,7 +34,7 @@ type CalcExercises = (dailyHours: number[], dayTarget: number) => Result;
 type GetRating = (average: number, dayTarget: number) => number;
 type GetRatingDesc = (rating: number) => string;
 
-const calculateExercises: CalcExercises = (dailyHours, dayTarget) => {
+export const calculateExercises: CalcExercises = (dailyHours, dayTarget) => {
 	const periodLength = dailyHours.length;
 	const trainingDays = dailyHours.filter(day => day !== 0).length;
 	const success = dailyHours.every(day => day >= dayTarget);
