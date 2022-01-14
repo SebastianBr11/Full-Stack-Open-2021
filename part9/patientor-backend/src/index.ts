@@ -2,6 +2,7 @@ import express from 'express';
 import diagnosesRouter from './routes/diagnoses';
 import patientsRouter from './routes/patients';
 const app = express();
+app.use(express.json());
 
 app.get('/api/ping', (_req, res) => {
 	res.send('pong');
