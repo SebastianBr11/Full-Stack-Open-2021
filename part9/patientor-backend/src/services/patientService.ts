@@ -1,11 +1,16 @@
 import { v4 as uuid } from 'uuid';
 import patients from '../../data/patients';
-import { NewPatient, Patient, PatientNoSSN } from '../types';
+import { NewPatient, Patient, PublicPatient } from '../types';
 
 const getPatients = () => patients;
 
-const getPatientsNoSSN = (): PatientNoSSN[] =>
+const getPatientsNoSSN = (): PublicPatient[] =>
 	patients.map(p => ({ ...p, ssn: undefined }));
+
+const findById = (id: string): Patient | undefined => {
+	const patient = patients.find(p => p.id === id);
+	return patient;
+};
 
 const addPatient = (patient: NewPatient): Patient => {
 	const newPatient: Patient = {
@@ -20,5 +25,6 @@ const addPatient = (patient: NewPatient): Patient => {
 export default {
 	getPatients,
 	getPatientsNoSSN,
+	findById,
 	addPatient,
 };
