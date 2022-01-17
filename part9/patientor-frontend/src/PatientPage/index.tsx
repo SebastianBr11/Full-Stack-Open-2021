@@ -3,7 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Header, Icon } from 'semantic-ui-react';
 import { apiBaseUrl } from '../constants';
-import { useStateValue } from '../state';
+import { updatePatient, useStateValue } from '../state';
 import { Gender, Patient } from '../types';
 
 const PatientPage = () => {
@@ -35,7 +35,7 @@ const PatientPage = () => {
         const { data: patient } = await axios.get<Patient>(
           `${apiBaseUrl}/patients/${patientId}`
         );
-        dispatch({ type: 'UPDATE_PATIENT', payload: patient });
+        dispatch(updatePatient(patient));
       } catch (e) {
         console.error(e);
       }
