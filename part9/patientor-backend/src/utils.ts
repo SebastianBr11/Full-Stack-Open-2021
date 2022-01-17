@@ -1,4 +1,4 @@
-import { Entry, Gender, NewPatient } from './types';
+import { Entry, Gender, NewEntry, NewPatient } from './types';
 
 type Fields = {
   name: unknown;
@@ -28,6 +28,13 @@ const toNewPatient = ({
     entries: parseEntries(entries),
   };
   return newPatient;
+};
+
+interface EntryFields {}
+
+export const toNewEntry = ({}: EntryFields): NewEntry => {
+  const newEntry: NewEntry = {};
+  return newEntry;
 };
 
 const parseName = (name: unknown): string => {
@@ -65,7 +72,7 @@ const parseOccupation = (occupation: unknown): string => {
   return occupation;
 };
 
-const parseEntries = (entries: Fields['entries']): Entry[] => {
+export const parseEntries = (entries: Fields['entries']): Entry[] => {
   const areCorrect = entries.every(entry => {
     if (!entry) return false;
 
