@@ -66,7 +66,9 @@ const PatientPage = () => {
           </p>
           <ul>
             {entry.diagnosisCodes?.map(code => (
-              <li key={code}>{code}</li>
+              <li key={code}>
+                {code} {state.diagnoses[code]?.name}
+              </li>
             ))}
           </ul>
         </Container>
