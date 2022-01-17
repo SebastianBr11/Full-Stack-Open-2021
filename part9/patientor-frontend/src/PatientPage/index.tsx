@@ -53,8 +53,24 @@ const PatientPage = () => {
         {patient.name}
         <Icon name={genderIcon} />
       </Header>
-      <p>ssn: {patient.ssn}</p>
-      <p>occupation: {patient.occupation}</p>
+      <p>
+        ssn: {patient.ssn}
+        <br />
+        occupation: {patient.occupation}
+      </p>
+      <Header as='h2'>entries</Header>
+      {patient.entries.map(entry => (
+        <Container key={entry.id}>
+          <p>
+            {entry.date} <i>{entry.description}</i>
+          </p>
+          <ul>
+            {entry.diagnosisCodes?.map(code => (
+              <li key={code}>{code}</li>
+            ))}
+          </ul>
+        </Container>
+      ))}
     </Container>
   );
 };
