@@ -17,7 +17,7 @@ export interface UnknownBaseEntry {
 	description: unknown;
 	date: unknown;
 	specialist: unknown;
-	diagnosisCodes?: unknown;
+	diagnosisCodes?: unknown[];
 }
 
 export interface HospitalEntry extends BaseEntry {

@@ -133,7 +133,7 @@ const parseType = (type: unknown): Entry['type'] => {
 };
 
 const parseDiagnosisCodes = (
-	diagnosisCodes: unknown
+	diagnosisCodes: unknown[]
 ): Array<Diagnose['code']> => {
 	if (
 		!diagnosisCodes ||
