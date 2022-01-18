@@ -36,7 +36,7 @@ export interface UnknownHospitalEntry extends UnknownBaseEntry {
 	};
 }
 
-interface OccupationalHealthcareEntry extends BaseEntry {
+export interface OccupationalHealthcareEntry extends BaseEntry {
 	type: 'OccupationalHealthcare';
 	employerName: string;
 	sickLeave?: {
@@ -45,7 +45,7 @@ interface OccupationalHealthcareEntry extends BaseEntry {
 	};
 }
 
-interface UnknownOccHealthcareEntry extends UnknownBaseEntry {
+export interface UnknownOccHealthcareEntry extends UnknownBaseEntry {
 	type: 'OccupationalHealthcare';
 	employerName: unknown;
 	sickLeave?: {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import express from 'express';
 import patientService from '../services/patientService';
 import toNewPatient, { toNewEntry } from '../utils';
@@ -34,6 +35,7 @@ router.post('/', (req, res) => {
 
 router.post('/:id/entries', (req, res) => {
 	try {
+		console.log(req.body);
 		const entry = toNewEntry(req.body);
 		const addedEntry = patientService.addEntry({
 			patientId: req.params.id,
@@ -45,6 +47,7 @@ router.post('/:id/entries', (req, res) => {
 		if (error instanceof Error) {
 			errorMessage += ' Error: ' + error.message;
 		}
+		console.error(errorMessage);
 		res.status(400).send(errorMessage);
 	}
 });

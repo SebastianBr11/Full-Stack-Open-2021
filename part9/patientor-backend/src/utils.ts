@@ -7,9 +7,11 @@ import {
 	HospitalEntry,
 	NewEntry,
 	NewPatient,
+	OccupationalHealthcareEntry,
 	UnionOmit,
 	UnknownEntry,
 	UnknownHospitalEntry,
+	UnknownOccHealthcareEntry,
 } from './types';
 
 type Fields = {
@@ -49,30 +51,16 @@ export const toNewEntry = ({
 	diagnosisCodes,
 	...rest
 }: UnknownEntry): NewEntry => {
+	if (!rest.type || !isString(rest.type) || !isEntryType(rest.type))
+		throw new Error('Wrong entry type');
 	const restProps = parseRest(rest);
 	const newEntry: NewEntry = {
 		date: parseDate(date),
 		description: parseDescription(description),
 		specialist: parseSpecialist(specialist),
-		type: parseType(rest.type),
 		diagnosisCodes: parseDiagnosisCodes(diagnosisCodes),
+		...restProps,
 	};
-
-	switch (newEntry.type) {
-		case 'HealthCheck':
-			newEntry.healthCheckRating = parseHealthCheckRating(
-				rest.healthCheckRating
-			);
-			break;
-		case 'Hospital':
-			newEntry.discharge;
-			break;
-		case 'OccupationalHealthcare':
-			newEntry.employerName = parseEmployerName(rest.employerName);
-			newEntry.sickLeave;
-		default:
-			assertNever(newEntry);
-	}
 	return newEntry;
 };
 
@@ -125,21 +113,11 @@ const parseSpecialist = (specialist: unknown): string => {
 	return specialist;
 };
 
-const parseType = (type: unknown): Entry['type'] => {
-	if (!type || !isString(type) || !isEntryType(type)) {
-		throw new Error('Incorrect or missing type');
-	}
-	return type;
-};
-
 const parseDiagnosisCodes = (
-	diagnosisCodes: unknown[]
-): Array<Diagnose['code']> => {
-	if (
-		!diagnosisCodes ||
-		!Array.isArray(diagnosisCodes) ||
-		diagnosisCodes.some(d => !isDiagnosisCode(d))
-	) {
+	diagnosisCodes?: unknown[]
+): Array<Diagnose['code']> | undefined => {
+	if (!diagnosisCodes) return diagnosisCodes;
+	if (!Array.isArray(diagnosisCodes) || !areDiagnosisCodes(diagnosisCodes)) {
 		throw new Error('Incorrect or missing diagnosis codes');
 	}
 	return diagnosisCodes;
@@ -149,25 +127,33 @@ type UnknownRest = UnionOmit<
 	UnknownEntry,
 	'description' | 'date' | 'specialist' | 'diagnosisCodes' | 'id'
 >;
+
 type RestType = UnionOmit<
 	Entry,
 	'description' | 'date' | 'specialist' | 'diagnosisCodes' | 'id'
 >;
 
 const parseRest = (rest: UnknownRest): RestType => {
-	if (!rest || !isString(rest.type) || !isEntryType(rest.type)) {
+	if (
+		!rest ||
+		!isString(rest.type) ||
+		!isEntryType(rest.type) ||
+		!isRest(rest)
+	) {
 		throw new Error('Incorrect or missing specific parameters');
 	}
+	return rest;
+};
 
-	const newRest = {};
-
+const isRest = (rest: UnknownRest): rest is RestType => {
 	switch (rest.type) {
 		case 'HealthCheck':
 			if (
-				!rest.healthCheckRating ||
+				(!rest.healthCheckRating && rest.healthCheckRating !== 0) ||
 				!isNumber(rest.healthCheckRating) ||
 				!isHealthCheckRating(rest.healthCheckRating)
 			) {
+				console.log(rest.healthCheckRating);
 				throw new Error('Incorrect or missing health check rating');
 			}
 			break;
@@ -180,9 +166,12 @@ const parseRest = (rest: UnknownRest): RestType => {
 			if (!rest.employerName || !isString(rest.employerName)) {
 				throw new Error('Incorrect or missing employer name');
 			}
-	}
 
-	return rest;
+			if (!isSickLeave(rest.sickLeave)) {
+				throw new Error('Incorrect or missing sick leave');
+			}
+	}
+	return true;
 };
 
 export const parseEntries = (entries: Fields['entries']): Entry[] => {
@@ -225,11 +214,11 @@ const isEntryType = (type: string): type is Entry['type'] => {
 	);
 };
 
-const isDiagnosisCode = (code: string): code is Diagnose['code'] => {
-	return diagnoseService
-		.getDiagnoses()
-		.map(d => d.code)
-		.includes(code);
+const areDiagnosisCodes = (
+	codes: unknown[]
+): codes is Array<Diagnose['code']> => {
+	const possibleCodes = diagnoseService.getDiagnoses().map(d => d.code);
+	return codes.every(code => isString(code) && possibleCodes.includes(code));
 };
 
 const isHealthCheckRating = (rating: number): rating is HealthCheckRating => {
@@ -239,18 +228,34 @@ const isHealthCheckRating = (rating: number): rating is HealthCheckRating => {
 const isDischarge = (
 	discharge: UnknownHospitalEntry['discharge']
 ): discharge is HospitalEntry['discharge'] => {
-	return (
+	console.log(discharge);
+	return !(
 		!discharge ||
 		!discharge.criteria ||
 		!discharge.date ||
 		!isString(discharge.criteria) ||
 		!isString(discharge.date) ||
-		!isDate(discharge?.date)
+		!isDate(discharge.date)
+	);
+};
+
+const isSickLeave = (
+	sickLeave: UnknownOccHealthcareEntry['sickLeave']
+): sickLeave is OccupationalHealthcareEntry['sickLeave'] => {
+	return !(
+		!sickLeave ||
+		!sickLeave.startDate ||
+		!sickLeave.endDate ||
+		!isString(sickLeave.startDate) ||
+		!isString(sickLeave.endDate) ||
+		!isDate(sickLeave.startDate) ||
+		!isDate(sickLeave.endDate)
 	);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isGender = (param: any): param is Gender => {
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 	return Object.values(Gender).includes(param);
 };
 
