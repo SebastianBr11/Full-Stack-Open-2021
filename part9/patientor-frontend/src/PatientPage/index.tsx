@@ -21,6 +21,7 @@ const PatientPage = () => {
   const { patientId } = useParams<{ patientId: string }>();
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [error, setError] = useState<string | undefined>();
 
   const openModal = (): void => setModalOpen(true);
 
@@ -38,7 +39,7 @@ const PatientPage = () => {
       closeModal();
     } catch (e: any) {
       console.error(e?.response?.data || 'Unknown Error');
-      // setError(e?.response?.data?.error || 'Unknown error');
+      setError(e?.response?.data || 'Unknown error');
     }
   };
 
@@ -94,7 +95,7 @@ const PatientPage = () => {
       <AddEntryModal
         modalOpen={modalOpen}
         onSubmit={submitNewEntry}
-        // error={error}
+        error={error}
         onClose={closeModal}
       />
       <Button onClick={() => openModal()}>Add New Entry</Button>

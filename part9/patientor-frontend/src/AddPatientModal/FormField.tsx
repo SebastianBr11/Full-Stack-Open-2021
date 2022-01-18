@@ -19,12 +19,24 @@ type SelectFieldProps = {
   name: string;
   label: string;
   options: GenderOption[] | HealthCheckRatingOption[];
+  onChange?: (e: React.SyntheticEvent<HTMLSelectElement, Event>) => void;
 };
 
-export const SelectField = ({ name, label, options }: SelectFieldProps) => (
+export const SelectField = ({
+  name,
+  label,
+  options,
+  onChange,
+}: SelectFieldProps) => (
   <Form.Field>
     <label>{label}</label>
-    <Field as='select' name={name} className='ui dropdown'>
+    <Field
+      onChange={onChange}
+      type='number'
+      as='select'
+      name={name}
+      className='ui dropdown'
+    >
       {options.map(option => (
         <option key={option.value} value={option.value}>
           {option.label || option.value}

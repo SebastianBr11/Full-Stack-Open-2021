@@ -53,6 +53,10 @@ export const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
         if (!values.specialist) {
           errors.specialist = requiredError;
         }
+        switch (values.type) {
+          case 'HealthCheck':
+            console.log(typeof values.healthCheckRating);
+        }
         return errors;
       }}
     >
@@ -80,6 +84,12 @@ export const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
             <SelectField
               label='Health Check Rating'
               name='healthCheckRating'
+              onChange={e => {
+                setFieldValue(
+                  'healthCheckRating',
+                  parseInt(e.currentTarget.value)
+                );
+              }}
               options={healthCheckRatingOptions}
             />
             <DiagnosisSelection
