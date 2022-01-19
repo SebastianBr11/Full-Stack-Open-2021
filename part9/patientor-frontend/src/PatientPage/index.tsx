@@ -14,6 +14,7 @@ import { EntryFormValues } from '../AddEntryModal/AddEntryForm';
 import { apiBaseUrl } from '../constants';
 import { addEntry, updatePatient, useStateValue } from '../state';
 import { Gender, Patient, Entry } from '../types';
+import { sanitizeEntry } from '../utils';
 import EntryDetails from './EntryDetails';
 
 const PatientPage = () => {
@@ -33,7 +34,7 @@ const PatientPage = () => {
     try {
       const { data: newEntry } = await axios.post<Entry>(
         `${apiBaseUrl}/patients/${patientId}/entries`,
-        values
+        sanitizeEntry(values)
       );
       console.log('values', values);
       dispatch(addEntry({ entry: newEntry, patientId }));

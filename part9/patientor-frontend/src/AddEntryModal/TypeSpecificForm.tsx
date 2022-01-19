@@ -1,7 +1,8 @@
-import { FormikHelpers } from 'formik';
+import { Field, FormikHelpers } from 'formik';
 import {
   HealthCheckRatingOption,
   SelectField,
+  TextField,
 } from '../AddPatientModal/FormField';
 import { Entry, HealthCheckRating } from '../types';
 import { assertNever } from '../utils';
@@ -17,8 +18,9 @@ const TypeSpecificForm = ({ type, setFieldValue }: TypeSpecificFormProps) => {
     case 'HealthCheck':
       return <HealthCheckForm setFieldValue={setFieldValue} />;
     case 'Hospital':
+      return <HospitalForm />;
     case 'OccupationalHealthcare':
-      return <></>;
+      return <OccupationalHealthcareForm />;
     default:
       assertNever(type);
   }
@@ -50,4 +52,46 @@ const HealthCheckForm = ({ setFieldValue }: HealthCheckFormProps) => {
   );
 };
 
-const HospitalForm = () => {};
+const HospitalForm = () => {
+  return (
+    <>
+      <Field
+        label='Discharge Date'
+        placeholder='YYYY-MM-DD'
+        name='discharge.date'
+        component={TextField}
+      />
+      <Field
+        label='Discharge Criteria'
+        placeholder='Discharge Criteria'
+        name='discharge.criteria'
+        component={TextField}
+      />
+    </>
+  );
+};
+
+const OccupationalHealthcareForm = () => {
+  return (
+    <>
+      <Field
+        label='Employer Name'
+        placeholder='Employer Name'
+        name='employerName'
+        component={TextField}
+      />
+      <Field
+        label='Sick Leave Start Date'
+        placeholder='YYYY-MM-DD'
+        name='sickLeave.startDate'
+        component={TextField}
+      />
+      <Field
+        label='Sick Leave End Date'
+        placeholder='YYYY-MM-DD'
+        name='sickLeave.endDate'
+        component={TextField}
+      />
+    </>
+  );
+};

@@ -37,7 +37,9 @@ export const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
       onSubmit={onSubmit}
       validate={values => {
         const requiredError = 'Field is required';
-        const errors: { [field: string]: string } = {};
+        const errors: {
+          [field: string]: { [subfield: string]: string } | string;
+        } = {};
         if (!values.description) {
           errors.description = requiredError;
         }
@@ -49,8 +51,32 @@ export const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
         }
         switch (values.type) {
           case 'HealthCheck':
-            console.log(typeof values.healthCheckRating);
+            if (values.healthCheckRating >= 4 || values.healthCheckRating < 0) {
+              errors.healthCheckRating = 'Invalid health check rating';
+            }
+            if (!values.healthCheckRating && values.healthCheckRating !== 0) {
+              errors.healthCheckRating = requiredError;
+            }
+            break;
+          case 'Hospital':
+            if (!values.discharge?.date) {
+              errors.discharge = { date: requiredError };
+            }
+            if (!values.discharge?.criteria) {
+              errors.discharge =
+                typeof errors.discharge === 'object' ? errors.discharge : {};
+              errors.discharge = {
+                ...errors.discharge,
+                criteria: requiredError,
+              };
+            }
+            break;
+          case 'OccupationalHealthcare':
+            if (!values.employerName) {
+              errors.employerName = requiredError;
+            }
         }
+        console.log(values, errors);
         return errors;
       }}
     >
