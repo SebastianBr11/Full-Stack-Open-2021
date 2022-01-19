@@ -35,6 +35,7 @@ const PatientPage = () => {
         `${apiBaseUrl}/patients/${patientId}/entries`,
         values
       );
+      console.log('values', values);
       dispatch(addEntry({ entry: newEntry, patientId }));
       closeModal();
     } catch (e: any) {

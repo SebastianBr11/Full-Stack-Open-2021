@@ -1,7 +1,14 @@
 import React from 'react';
-import { ErrorMessage, Field, FieldProps, FormikProps } from 'formik';
+import {
+  ErrorMessage,
+  Field,
+  FieldProps,
+  FormikHelpers,
+  FormikProps,
+} from 'formik';
 import { Dropdown, DropdownProps, Form } from 'semantic-ui-react';
-import { Diagnosis, Gender, HealthCheckRating } from '../types';
+import { Diagnosis, Entry, Gender, HealthCheckRating } from '../types';
+import { EntryFormValues } from '../AddEntryModal/AddEntryForm';
 
 // structure of a single option
 export type GenderOption = {
@@ -14,24 +21,36 @@ export type HealthCheckRatingOption = {
   label: string;
 };
 
+export type EntryTypeOption = {
+  value: Entry['type'];
+  label: string;
+};
+
 // props for select field component
 type SelectFieldProps = {
   name: string;
   label: string;
-  options: GenderOption[] | HealthCheckRatingOption[];
-  onChange?: (e: React.SyntheticEvent<HTMLSelectElement, Event>) => void;
+  options: GenderOption[] | HealthCheckRatingOption[] | EntryTypeOption[];
+  setFieldValue: FormikHelpers<EntryFormValues>['setFieldValue'];
+  asNumber?: boolean;
 };
 
 export const SelectField = ({
   name,
   label,
   options,
-  onChange,
+  setFieldValue,
+  asNumber,
 }: SelectFieldProps) => (
   <Form.Field>
     <label>{label}</label>
     <Field
-      onChange={onChange}
+      onChange={(e: React.SyntheticEvent<HTMLSelectElement, Event>) => {
+        setFieldValue(
+          name,
+          asNumber ? parseInt(e.currentTarget.value) : e.currentTarget.value
+        );
+      }}
       type='number'
       as='select'
       name={name}

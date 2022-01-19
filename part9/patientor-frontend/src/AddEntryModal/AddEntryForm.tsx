@@ -1,14 +1,15 @@
 import { Grid, Button } from 'semantic-ui-react';
-import { Field, Formik, Form } from 'formik';
+import { Field, Formik, Form, FormikHelpers } from 'formik';
 
 import {
   TextField,
-  SelectField,
-  HealthCheckRatingOption,
   DiagnosisSelection,
+  SelectField,
+  EntryTypeOption,
 } from '../AddPatientModal/FormField';
 import { Entry, HealthCheckRating, UnionOmit } from '../types';
 import { useStateValue } from '../state';
+import TypeSpecificForm from './TypeSpecificForm';
 
 /*
  * use type Patient, but omit id and entries,
@@ -20,13 +21,6 @@ interface Props {
   onSubmit: (values: EntryFormValues) => void;
   onCancel: () => void;
 }
-
-const healthCheckRatingOptions: HealthCheckRatingOption[] = [
-  { value: HealthCheckRating.Healthy, label: 'Healthy' },
-  { value: HealthCheckRating.LowRisk, label: 'Low Risk' },
-  { value: HealthCheckRating.HighRisk, label: 'High Risk' },
-  { value: HealthCheckRating.CriticalRisk, label: 'Critical Risk' },
-];
 
 export const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
   const [{ diagnoses }] = useStateValue();
@@ -60,9 +54,10 @@ export const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
         return errors;
       }}
     >
-      {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
+      {({ isValid, dirty, setFieldValue, setFieldTouched, values }) => {
         return (
           <Form className='form ui'>
+            <TypeSelectionForm setFieldValue={setFieldValue} />
             <Field
               label='Description'
               placeholder='Description'
@@ -81,16 +76,9 @@ export const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
               name='specialist'
               component={TextField}
             />
-            <SelectField
-              label='Health Check Rating'
-              name='healthCheckRating'
-              onChange={e => {
-                setFieldValue(
-                  'healthCheckRating',
-                  parseInt(e.currentTarget.value)
-                );
-              }}
-              options={healthCheckRatingOptions}
+            <TypeSpecificForm
+              type={values.type}
+              setFieldValue={setFieldValue}
             />
             <DiagnosisSelection
               setFieldValue={setFieldValue}
@@ -122,3 +110,24 @@ export const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
 };
 
 export default AddEntryForm;
+
+const entryTypeOptions: EntryTypeOption[] = [
+  { value: 'HealthCheck', label: 'Health Check' },
+  { value: 'Hospital', label: 'Hospital' },
+  { value: 'OccupationalHealthcare', label: 'Occupational Healthcare' },
+];
+
+interface TypeSelectionForm {
+  setFieldValue: FormikHelpers<EntryFormValues>['setFieldValue'];
+}
+
+const TypeSelectionForm = ({ setFieldValue }: TypeSelectionForm) => {
+  return (
+    <SelectField
+      setFieldValue={setFieldValue}
+      label='Entry Type'
+      name='type'
+      options={entryTypeOptions}
+    />
+  );
+};
